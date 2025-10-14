@@ -4,10 +4,31 @@ import { AnalysisInput } from '../types';
 import * as templates from '../templates';
 
 export class PromptBuilder {
+  // Hardcoded user persona for context-specific analysis
+  private readonly USER_PERSONA = {
+    role: 'Senior Executive',
+    focus: 'Leadership Development',
+    context: 'Startup/Scale-up',
+    description: 'Senior executive focused on leadership development in startup and scale-up environments'
+  };
+
   buildDetailedAnalysisPrompt(input: AnalysisInput): string {
     const template = templates.getGenreTemplate(input.genre, 'detailed');
 
-    return `You are an expert book analyst specializing in ${input.genre} books. Your task is to create a comprehensive, detailed analysis that serves the purpose of ${input.purpose} for ${input.audience}.
+    return `You are an expert book analyst specializing in ${input.genre} books. Your task is to create a comprehensive, detailed analysis specifically for a ${this.USER_PERSONA.role} focused on ${this.USER_PERSONA.focus} in ${this.USER_PERSONA.context} environments.
+
+<reader_profile>
+  <role>${this.USER_PERSONA.role}</role>
+  <focus_area>${this.USER_PERSONA.focus}</focus_area>
+  <organizational_context>${this.USER_PERSONA.context}</organizational_context>
+  <key_challenges>
+    - Scaling teams and organizations rapidly
+    - Building high-performance leadership cultures
+    - Managing founder-to-executive transitions
+    - Developing leadership capability at all levels
+    - Navigating growth-stage pressures and constraints
+  </key_challenges>
+</reader_profile>
 
 <analysis_request>
   <book_info>
@@ -39,12 +60,45 @@ ${template}
   </template_structure>
 
   <quality_standards>
-    - Relevant: Every insight directly applicable to ${input.purpose}
-    - Clear: Language appropriate for ${input.audience}
-    - Actionable: Concrete takeaways and applications
-    - Comprehensive: Cover all major concepts thoroughly
-    - Well-structured: Use markdown formatting effectively
-    - Professional: Maintain high analytical standards
+    <contextual_specificity>
+      - Write for ${this.USER_PERSONA.context} context specifically, not generic organizations
+      - Use startup/scale-up specific terminology and examples
+      - Address founder-CEO, VP-level, and emerging leader challenges
+      - Reference fast-growth constraints: limited resources, compressed timelines, rapid change
+      - Connect every concept to specific ${this.USER_PERSONA.context} scenarios
+    </contextual_specificity>
+
+    <psychological_depth>
+      - Explore underlying fears, anxieties, and identity dynamics driving behavior
+      - Address the emotional and psychological dimensions, not just mechanical techniques
+      - Name the inner experience of leadership challenges (anxiety, impostor syndrome, control needs)
+      - Connect concepts to personal transformation, not just skill acquisition
+      - Reveal the "why we resist" alongside "what to do"
+    </psychological_depth>
+
+    <practical_immediacy>
+      - Every concept must answer "What do I do Monday morning?"
+      - Provide specific, concrete actions not abstract principles
+      - Include decision frameworks, daily practices, and conversation scripts
+      - Front-load practical value - make insights instantly applicable
+      - Distinguish between quick-wins and long-term capability building
+    </practical_immediacy>
+
+    <intellectual_rigor>
+      - Maintain high analytical standards and conceptual clarity
+      - Define terms precisely, build arguments logically
+      - Acknowledge complexity, nuance, and context-dependency
+      - Present frameworks as tools for thinking, not universal prescriptions
+      - Include appropriate caveats, limitations, and when approaches don't apply
+    </intellectual_rigor>
+
+    <integration_orientation>
+      - Show how concepts connect to other leadership domains
+      - Bridge individual, team, and organizational levels
+      - Link to complementary frameworks and ideas
+      - Help reader build coherent mental models, not isolated techniques
+      - Position insights within broader leadership development journey
+    </integration_orientation>
   </quality_standards>
 </output_requirements>
 
@@ -56,9 +110,13 @@ Generate the detailed analysis following the exact template structure. Use prope
   buildSummaryPrompt(input: AnalysisInput): string {
     const template = templates.getGenreTemplate(input.genre, 'summary');
 
-    return `You are an expert book analyst creating a concise executive summary of "${input.bookTitle}" by ${input.author}.
+    return `You are an expert book analyst creating a concise executive summary of "${input.bookTitle}" by ${input.author}, specifically for a ${this.USER_PERSONA.role} focused on ${this.USER_PERSONA.focus} in ${this.USER_PERSONA.context} environments.
 
-This summary is for ${input.audience} who want to ${input.purpose}. Keep it concise yet comprehensive - aim for one page maximum.
+<reader_profile>
+  <role>${this.USER_PERSONA.role}</role>
+  <focus_area>${this.USER_PERSONA.focus}</focus_area>
+  <organizational_context>${this.USER_PERSONA.context}</organizational_context>
+</reader_profile>
 
 <analysis_context>
   <genre>${input.genre}</genre>
@@ -78,24 +136,30 @@ ${this.getGenreGuidance(input.genre)}
 ${template}
   </template_structure>
 
-  <key_principles>
-    - Scannable: Use clear sections and formatting
-    - Concise: Maximum impact with minimum words
-    - Strategic: Focus on high-level insights
-    - Actionable: Include key takeaways
+  <quality_standards>
+    - Context-specific: Write for ${this.USER_PERSONA.context} leaders, not generic audiences
+    - Psychologically-informed: Include emotional/identity dimensions, not just mechanics
+    - Immediately actionable: Front-load practical value and "do Monday" clarity
+    - Intellectually rigorous: Precise definitions, logical structure, appropriate nuance
+    - Scannable: Clear sections, visual hierarchy, easy to parse quickly
     - Complete: Can stand alone without other documents
-  </key_principles>
+  </quality_standards>
 </output_requirements>
 
-Generate a professional executive summary that captures the essence of the book in a format that's easy to scan and remember.`;
+Generate a professional executive summary that captures the essence of the book for startup/scale-up leaders. Focus on insights most relevant to rapid growth, team scaling, and leadership development challenges.`;
   }
 
   buildReferencePrompt(input: AnalysisInput): string {
     const template = templates.getGenreTemplate(input.genre, 'reference');
 
-    return `You are an expert book analyst creating a quick reference guide for "${input.bookTitle}" by ${input.author}.
+    return `You are an expert book analyst creating a quick reference guide for "${input.bookTitle}" by ${input.author}, specifically for a ${this.USER_PERSONA.role} focused on ${this.USER_PERSONA.focus} in ${this.USER_PERSONA.context} environments.
 
-This is a practical, day-to-day reference tool for ${input.audience}. Think: cheatsheet, field guide, or quick-lookup resource.
+<reader_profile>
+  <role>${this.USER_PERSONA.role}</role>
+  <focus_area>${this.USER_PERSONA.focus}</focus_area>
+  <organizational_context>${this.USER_PERSONA.context}</organizational_context>
+  <use_case>Daily field reference for leadership moments and decisions</use_case>
+</reader_profile>
 
 <analysis_context>
   <genre>${input.genre}</genre>
@@ -115,16 +179,17 @@ ${this.getGenreGuidance(input.genre)}
 ${template}
   </template_structure>
 
-  <design_principles>
-    - Quick: Easy to scan and find information
-    - Practical: Tools and tips you can use immediately
-    - Organized: Logical grouping of related concepts
-    - Memorable: Key points that stick
-    - Portable: Works well as a printed reference
-  </design_principles>
+  <quality_standards>
+    - Context-specific: ${this.USER_PERSONA.context} scenarios and terminology throughout
+    - Immediately usable: Checklists, scripts, frameworks for in-the-moment application
+    - Psychologically-aware: Address inner states and emotional dynamics, not just actions
+    - Scannable: Find what you need in 10 seconds under pressure
+    - Portable: Works as printed pocket reference or phone screenshot
+    - Complete: Self-contained tool requiring no other resources
+  </quality_standards>
 </output_requirements>
 
-Generate a highly practical quick reference guide optimized for daily use and quick lookups.`;
+Generate a highly practical field guide optimized for daily leadership moments in fast-growth environments. Think: "tool you pull out before a difficult conversation" or "checklist you review when facing a pattern."`;
   }
 
   private getGenreGuidance(genre: string): string {
@@ -179,14 +244,18 @@ Generate a highly practical quick reference guide optimized for daily use and qu
 
       leadership: `
 <genre_guidance>
-  For leadership books:
-  - Focus on practical, daily applications
-  - Include specific behaviors and actions leaders can take
-  - Connect concepts to real leadership challenges
-  - Provide tools and frameworks for immediate use
-  - Emphasize team performance and outcomes
+  For leadership books in ${this.USER_PERSONA.context} context:
+  - Focus on practical, daily applications for scaling organizations
+  - Include specific behaviors and actions startup/scale-up leaders can take
+  - Connect concepts to real leadership challenges in fast-growth environments
+  - Address the psychological dimension: fears, anxieties, identity dynamics
+  - Explore what makes concepts difficult to implement (resistance, discomfort)
+  - Provide tools and frameworks for immediate use under resource constraints
+  - Emphasize both team performance and leader capability development
   - Use clear, direct language without unnecessary jargon
   - Include self-assessment and reflection prompts
+  - Show how concepts apply differently at different growth stages
+  - Address founder-to-executive transitions explicitly when relevant
 </genre_guidance>`,
     };
 

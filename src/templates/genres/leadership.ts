@@ -3,142 +3,282 @@
 import { GenreTemplate } from '../base';
 
 export const leadershipTemplate: GenreTemplate = {
-  detailed: `# [Book Title] - Leadership Analysis
+  detailed: `# [Book Title] - Leadership Analysis for Startup/Scale-up Leaders
 
 ## Book Information
 - **Title**: [Full Title]
 - **Author**: [Author Name & Background]
-- **Target Audience**: [Leadership Level]
-- **Context**: [Industry/Domain]
+- **Leadership Focus**: [Primary leadership domain - e.g., team development, organizational scaling, founder transitions]
+- **Target Audience**: Senior executives, VPs, and emerging leaders in fast-growth environments
+- **Organizational Context**: Startup/Scale-up (10-500+ people, rapid growth, resource constraints)
 
 ## Overview
-[Book's leadership philosophy and approach]
+[Book's leadership philosophy and approach - translate to startup/scale-up context explicitly]
+
+## Core Concepts
+[Define the 3-5 most important concepts with precision - these are the mental models that drive everything else]
 
 ## Chapter-by-Chapter Analysis
 
 ### Chapter 1: [Title]
-**Core Leadership Principles**:
-[Main concepts]
+**Key Business Concepts**:
+[Main concepts - define precisely, avoid vague language]
 
-**Real-World Applications**:
-- **Scenario 1**: [How to apply in this situation]
-- **Scenario 2**: [How to apply in this situation]
+**Why This Matters in Scaling Organizations**:
+[Connect explicitly to startup/scale-up challenges: hiring ahead of curve, building culture at speed, limited resources, compressed timelines, founder-to-executive transitions]
 
-**Key Behaviors**:
-- [Specific action leaders should take]
-- [Specific action leaders should take]
+**Psychological Dynamics**:
+[Explore the inner experience: What fears, anxieties, or identity dynamics drive the behaviors discussed? Why do leaders resist these concepts? What makes this hard psychologically, not just operationally?]
+
+**Frameworks & Models**:
+- **[Framework Name]**: [Explain the mental model - how it helps you think, not just what to do]
+  - **When to Apply**: [Specific situations in scaling contexts]
+  - **How to Apply**: [Step-by-step for startup/scale-up leaders]
+  - **Common Pitfalls**: [What goes wrong, especially under growth pressure]
+
+**Startup/Scale-up Applications**:
+- **Stage: [0-20 people / 20-50 / 50-150 / 150+]**: [How concept applies differently at this stage]
+- **Founder-CEO Context**: [If relevant - how founders specifically should think about this]
+- **VP/Director Context**: [How emerging leaders apply this without full authority]
+
+**Leadership Tools**:
+[Specific, usable tools - checklists, conversation frameworks, decision protocols]
 
 **Case Studies**:
-[Examples from the chapter with analysis]
+[Translate book examples to startup/scale-up equivalents when possible]
 
-**Common Leadership Challenges Addressed**:
-- [Challenge and solution]
-- [Challenge and solution]
+**Actionable Takeaways**:
+1. [Specific, concrete action - "What do I do Monday morning?"]
+2. [Include both quick-wins and capability-building work]
 
-**Reflection Questions**:
-1. [Question for self-assessment]
-2. [Question for application]
+**ROI Considerations**:
+[Time investment, resources required, expected benefits in growth context]
+
+**Common Business Challenges**:
+- **[Specific scaling challenge]**: [How this chapter's concepts help]
 
 [Repeat for each chapter]
 
 ## Core Leadership Framework
-[The book's main model or system explained]
+[The book's main model or system explained - present as thinking tool, not prescription]
+
+**How this framework helps you think differently about leadership challenges**:
+[Explain the mental model shift, not just the mechanics]
+
+**What makes this framework counterintuitive or difficult**:
+[Address the psychological resistance and why it's hard to adopt]
+
+## Strategic Insights
+
+### Insight 1: [Core insight name]
+- **What**: [The insight stated precisely]
+- **Why It Matters**: [Impact on organizational performance and leader effectiveness]
+- **How to Apply**: [Concrete actions in startup/scale-up context]
+- **Metrics**: [How to measure if this is working]
+- **Timeline**: [When to expect results - distinguish quick wins from long-term capability building]
+- **Psychological Dimension**: [What inner work or mindset shift this requires]
+
+[Repeat for each major insight]
 
 ## Leadership Roles Defined
-### Role 1: [e.g., Coach]
-- **Definition**: [What this role means]
-- **When to Use**: [Situations]
-- **Key Behaviors**: [Actions]
-- **Success Indicators**: [Measurement]
+### Role 1: [e.g., Partnership Leader vs. Heroic Leader]
+- **Definition**: [What this role means - precise definition]
+- **When to Use**: [Specific situations in scaling organizations]
+- **Key Behaviors**: [Observable actions]
+- **Psychological Requirements**: [What inner state or mindset this requires - e.g., tolerating discomfort, releasing control]
+- **Success Indicators**: [What good looks like]
+- **Common Failure Modes**: [What goes wrong and why]
 
 [Repeat for each role]
 
 ## Leadership Tools & Methods
-### Tool 1: [e.g., After Action Reviews]
-- **Purpose**: [What it accomplishes]
-- **When to Deploy**: [Timing]
-- **How to Execute**: [Step-by-step process]
-- **Expected Outcomes**: [Results]
-- **Common Mistakes**: [What to avoid]
+### Tool 1: [e.g., Responsibility Conversation Protocol]
+- **Purpose**: [What it accomplishes - be specific about outcomes]
+- **When to Deploy**: [Timing and triggering situations]
+- **How to Execute**: [Step-by-step process with example language]
+- **Psychological Dynamics**: [What makes this tool hard to use? What anxiety or discomfort does it surface?]
+- **Expected Outcomes**: [Results - both behavioral and psychological]
+- **Common Mistakes**: [What to avoid, especially under pressure]
+- **Startup/Scale-up Adaptations**: [How to adjust for resource constraints, speed, growth pressure]
 
 [Repeat for each tool]
 
-## Team Development Strategies
-[How to build and grow teams using the book's concepts]
+## Industry Applications
+[How concepts apply specifically in startup/scale-up contexts - tie to real challenges]
 
-## Decision-Making Framework
-[The book's approach to leadership decisions]
-
-## Crisis Leadership
-[How to lead in difficult situations]
-
-## Cultural Impact
-[How to shape organizational culture]
-
-## Measuring Leadership Effectiveness
-[KPIs and indicators from the book]
+## Competitive Advantage
+[How applying these concepts creates market differentiation through organizational capability]
 
 ## Implementation Roadmap
-**First 30 Days**:
-- [Action items]
 
-**First 90 Days**:
-- [Action items]
+**Phase 1 - Assessment** (Weeks 1-4):
+- [Diagnostic work to understand current state]
+- [Map existing patterns using frameworks from book]
 
-**First Year**:
-- [Long-term goals]
+**Phase 2 - Planning** (Weeks 5-8):
+- [Design intervention strategies]
+- [Create explicit agreements and structures]
+
+**Phase 3 - Execution** (Months 3-6):
+- [Implementation with coaching and support]
+- [Build new habits and capabilities]
+
+**Phase 4 - Optimization** (Months 7-12):
+- [Scale approaches organization-wide]
+- [Integrate into systems and culture]
+
+## Financial Impact
+- **Cost**: [Time, resources, external support needed]
+- **Return**: [Expected performance improvements, risk reduction]
+- **Break-even**: [When ROI typically appears]
+
+## Risk Assessment
+- **[Risk 1]**: [Mitigation approach]
+- **[Risk 2]**: [Mitigation approach]
+
+## Success Metrics
+[Specific, measurable indicators that these concepts are working]
+
+## Organizational Requirements
+- **Team**: [Who needs to be involved]
+- **Resources**: [What's needed to implement effectively]
+- **Culture**: [Prerequisites and cultural conditions]
+- **Leadership Support**: [What's required from the top]
+
+## Scaling Considerations
+[How to apply concepts as organization grows - what changes at different stages]
+
+## Lessons from Failures
+[Common implementation pitfalls and how to avoid them]
 
 ## Conclusion
-[Summary and call to action for leaders]`,
+[Final synthesis: How this makes you more effective as a leader in high-growth environments. What's the transformation this enables?]`,
 
-  summary: `# [Book Title] - Leadership Executive Summary
+  summary: `# [Book Title] - Executive Summary
 
-**Author**: [Name] | **For**: [Leadership Level] | **Date**: [Date]
+**Author**: [Name] | **For**: Senior Executives | **Date**: [Date]
 
-## Core Leadership Philosophy
-[2-3 sentences capturing the book's main leadership approach]
+---
 
-## Key Leadership Principles
-1. **[Principle 1]**: [Explanation] - Apply by [action]
-2. **[Principle 2]**: [Explanation] - Apply by [action]
-3. **[Principle 3]**: [Explanation] - Apply by [action]
-4. **[Principle 4]**: [Explanation] - Apply by [action]
-5. **[Principle 5]**: [Explanation] - Apply by [action]
+## Why This Matters
 
-## Leadership Roles
-- **[Role 1]**: [When to use] - [Key behaviors]
-- **[Role 2]**: [When to use] - [Key behaviors]
-- **[Role 3]**: [When to use] - [Key behaviors]
+[50 words: Connect book's core idea to human impact and universal needs in startup/scale-up context. Single powerful paragraph answering: Why should anyone care about this? Focus on the transformation this enables for leaders building organizations.]
 
-## Essential Leadership Tools
-1. **[Tool 1]**: [What it does] - [How to use]
-2. **[Tool 2]**: [What it does] - [How to use]
-3. **[Tool 3]**: [What it does] - [How to use]
-4. **[Tool 4]**: [What it does] - [How to use]
+---
 
-## Key Statistics & Research
-- [Supporting data point 1]
-- [Supporting data point 2]
-- [Supporting data point 3]
+## One Big Idea
 
-## Common Leadership Challenges Solved
-- **[Challenge 1]**: [Solution approach]
-- **[Challenge 2]**: [Solution approach]
-- **[Challenge 3]**: [Solution approach]
+[75 words: The book's central argument is [X]. Here's what that means in practice for scaling organizations: [Y]. Clear statement followed by concrete example showing application in fast-growth environment.]
+
+---
+
+## Key Insights
+
+[5 insights ordered by actionability. Format: punchy statement + practical application + connection to scaling/leadership]
+
+**1. [Insight Name]**: [One sentence stating the idea] - [Practical application in startup/scale-up context] - [Impact on team performance or organizational capability]
+
+**2. [Insight Name]**: [Statement] - [How founders or VPs apply this] - [Connection to growth challenges]
+
+**3. [Insight Name]**: [Statement with psychological dimension] - [Application under resource constraints] - [What this enables]
+
+**4. [Insight Name]**: [Counterintuitive statement] - [Why this matters when scaling] - [Organizational impact]
+
+**5. [Insight Name]**: [Principle] - [Daily practice or framework] - [Long-term capability building]
+
+---
+
+## Immediate Actions
+
+**1. [Action Verb + What]**: [Specific 48-hour action with concrete steps] to [measurable outcome] by [timeframe]. [One sentence on why this creates immediate value in your context.]
+
+**2. [Action Verb + What]**: [Clear directive] to [result] within two days. [Connection to insight above and your current challenges.]
+
+**3. [Action Verb + What]**: [Concrete next step] to [outcome you can see/feel]. [How this enables further progress on transformation.]
+
+---
+
+## Strategic Applications
+
+**For Your Business/Venture**:
+[50 words: How concepts apply to current product/market/growth challenges. Connect to active projects. Show how this accelerates business goals or addresses constraints.]
+
+**For Team/Leadership Development**:
+[50 words: Transform approach to hiring, developing leaders, building culture at speed. Link to specific challenges: founder transitions, VP effectiveness, manager capability. Include psychological dimension.]
+
+**For Impact Goals**:
+[50 words: Connection to building sustainable high-performance organizations, creating meaningful work environments, or amplifying mission. Tie to broader purpose beyond just scaling.]
+
+---
+
+## Challenges to Conventional Thinking
+
+**[Counterintuitive Idea 1]**: Most startup leaders believe [conventional wisdom about scaling/leadership], but this book argues [contrarian position] because [evidence]. [Why this paradigm shift matters for your context.] [40 words]
+
+**[Counterintuitive Idea 2]**: The standard approach to [common leadership challenge] is [X], but [Author] shows [Y] works better because [psychological or organizational dynamic]. [Implication for how you build/lead.] [40 words]
+
+---
+
+## Memorable Quotes
+
+> "[Powerful quote capturing core principle - select for quotability and actionability]"
+
+[One sentence context: When this shows up in scaling organizations and why it matters]
+
+> "[Quote about psychological or organizational dynamic]"
+
+[One sentence application: How this changes your thinking about leadership challenge]
+
+> "[Quote about transformation or capability building]"
+
+[One sentence implication: What this enables for your team or organization]
+
+---
+
+## Integration Questions
+
+1. [Open-ended question connecting to your specific startup/scale-up challenge - e.g., "How does this reframe your approach to [current leadership challenge] as you scale from [X] to [Y] people?"]
+
+2. [Question about implementation - e.g., "What would applying [framework name] look like in your [specific context - team meetings, hiring process, 1-on-1s]?"]
+
+3. [Question surfacing resistance or assumptions - e.g., "Which of your current beliefs about [topic] does this challenge, and what psychological shift would be required to adopt this new perspective?"]
+
+---
 
 ## Implementation Priority
-**Start Immediately**: [1-2 practices with instant impact]
-**Build Over 90 Days**: [2-3 skills requiring practice]
-**Master Over Time**: [1-2 advanced capabilities]
 
-## Impact on Team Performance
-[Expected outcomes when applied]
+**Start Immediately** (This week):
+- [Practice with instant impact - specific behavior or conversation]
+- [Diagnostic work - map current patterns using framework]
+- [One small experiment to test concept]
+
+**Build Over Time** (Next 90 days):
+- [Capability requiring sustained practice with coaching]
+- [System change - meeting structure, decision rights, etc.]
+- [Skill development through repeated application]
+
+**Master Long-term** (6-12 months):
+- [Advanced transformation - identity or organizational culture shift]
+- [Embedding in systems - hiring, performance management, promotion]
+- [Scaling across organization - second-line leaders adopting principles]
+
+---
+
+## Key Statistics & Research
+
+- [Data point about organizational performance or team effectiveness]
+- [Research finding about leadership behavior impact in growth companies]
+- [Quantitative outcome from case study - time saved, performance improved, retention increased]
+
+---
 
 ## Final Message
-[Author's core call to action for leaders]
 
-## Bottom Line
-[One sentence: How this makes you a better leader]`,
+[75 words: Core insight about leadership transformation. Connect to startup/scale-up reality: compressed timelines, limited resources, founder transitions, rapid team growth. Include both practical dimension (what changes in behavior/systems) and psychological dimension (what inner work this requires). End with what this transformation enables for organization and mission.]
+
+---
+
+**Bottom Line**: [One powerful, memorable sentence capturing how this transforms your leadership effectiveness in fast-growth environments. Make it both inspiring and actionable.]`,
 
   reference: `# [Book Title] - Leadership Field Guide
 
