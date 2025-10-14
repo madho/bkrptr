@@ -64,6 +64,12 @@ export interface AnalysisOutput {
     input: AnalysisInput;
     tokensUsed?: number;
     generationTime?: number;
+    usage?: {
+      inputTokens: number;
+      outputTokens: number;
+      totalTokens: number;
+      estimatedCost: number;
+    };
   };
 
   // File paths

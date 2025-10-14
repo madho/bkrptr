@@ -55,10 +55,10 @@ Be decisive and choose the single best-fitting genre. Consider:
 Respond with ONLY the JSON object, no other text.`;
 
     try {
-      const response = await this.claudeClient.generate(prompt);
+      const result = await this.claudeClient.generate(prompt);
 
-      // Extract JSON from response
-      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      // Extract JSON from response content
+      const jsonMatch = result.content.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {
         throw new Error('Failed to parse genre detection response');
       }

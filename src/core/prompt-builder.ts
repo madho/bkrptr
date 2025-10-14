@@ -178,6 +178,31 @@ ${template}
       - Position insights within broader leadership development journey
     </integration_orientation>
   </quality_standards>
+
+  <chapter_analysis_requirements>
+    CRITICAL: Each chapter analysis MUST contain 7-10 paragraphs minimum. Do not condense or summarize - expand fully.
+
+    Required paragraph breakdown per chapter:
+    - Opening Context: 2-3 sentences setting up the chapter
+    - Core Framework: 2-3 sentences on main concept
+    - Key Insights: MINIMUM 3 full paragraphs, TARGET 5 paragraphs
+      * Each paragraph should be 4-6 sentences exploring depth
+      * Cover: counterintuitive aspects, startup/scale-up manifestations, psychological dynamics, scaling challenges, real examples, vicious cycles, implementation difficulties
+    - Real-World Application: MINIMUM 2 full paragraphs, TARGET 3 paragraphs
+      * Daily work scenarios for startup/scale-up leaders
+      * Specific situations: board meetings, team conflicts, hiring, crises
+      * Success vs. failure indicators
+    - Critical Examples: MINIMUM 1 full paragraph, TARGET 2 paragraphs
+      * Concrete case studies with lessons
+    - Leadership Implications: MINIMUM 2 full paragraphs, TARGET 3 paragraphs
+      * Why this matters for founder-CEOs and VPs in fast-growth
+      * Behavioral AND psychological transformation required
+      * Why this gets harder as you scale
+    - Tactical Takeaways: 3-4 specific, actionable items with details
+    - Connection to Larger Thesis: 1-2 sentences linking to book's arc
+
+    IMPORTANT: Write full, detailed paragraphs. Expand concepts thoroughly. Do NOT summarize or condense. Aim for 7-10 total paragraphs per chapter.
+  </chapter_analysis_requirements>
 </output_requirements>
 
 ${input.bookContent ? `\n<book_content>\n${input.bookContent}\n</book_content>\n` : ''}

@@ -123,6 +123,16 @@ export async function analyzeCommand(title: string, options: AnalyzeOptions) {
     console.log(chalk.gray(`⏱️  Generation time: ${(result.metadata.generationTime! / 1000).toFixed(1)}s`));
     console.log(chalk.gray(`🆔 Analysis ID: ${result.metadata.id}`));
 
+    // Display cost information if available
+    if (result.metadata.usage) {
+      console.log('');
+      console.log(chalk.bold('💰 Usage & Cost:'));
+      console.log(chalk.gray(`   Input tokens:  ${result.metadata.usage.inputTokens.toLocaleString()}`));
+      console.log(chalk.gray(`   Output tokens: ${result.metadata.usage.outputTokens.toLocaleString()}`));
+      console.log(chalk.gray(`   Total tokens:  ${result.metadata.usage.totalTokens.toLocaleString()}`));
+      console.log(chalk.green(`   Estimated cost: $${result.metadata.usage.estimatedCost.toFixed(3)}`));
+    }
+
     // Open if requested
     if (options.open && options.save) {
       console.log(chalk.blue('\n📖 Opening MADHO summary...\n'));

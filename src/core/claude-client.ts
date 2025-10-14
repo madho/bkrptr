@@ -62,7 +62,7 @@ export class ClaudeClient {
     }
   }
 
-  async generate(prompt: string): Promise<string> {
+  async generate(prompt: string): Promise<{ content: string; usage?: { input_tokens: number; output_tokens: number } }> {
     this.logger.debug('Starting generation');
 
     try {
@@ -81,7 +81,10 @@ export class ClaudeClient {
         throw new Error('No text content in response');
       }
 
-      return textContent.text;
+      return {
+        content: textContent.text,
+        usage: response.usage
+      };
 
     } catch (error: any) {
       this.logger.error('Generation failed', error);
