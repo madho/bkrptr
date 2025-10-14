@@ -2,10 +2,12 @@
 
 import inquirer from 'inquirer';
 import { BookAnalyzer } from '../../core/analyzer';
+import { GenreDetector } from '../../core/genre-detector';
 import { AnalysisInput } from '../../types';
 import { Logger } from '../../utils/logger';
 import { openInViewer } from '../../utils/file-opener';
 import chalk from 'chalk';
+import ora from 'ora';
 
 export async function interactiveCommand() {
   const logger = new Logger();
@@ -30,12 +32,35 @@ export async function interactiveCommand() {
       },
     ]);
 
+    // Auto-detect genre
+    console.log(chalk.blue('\n🔍 Auto-detecting book genre...\n'));
+    const spinner = ora('Analyzing book metadata...').start();
+
+    const genreDetector = new GenreDetector();
+    let detectedGenre;
+
+    try {
+      const detection = await genreDetector.detectGenre(
+        bookInfo.bookTitle,
+        bookInfo.author
+      );
+      detectedGenre = detection.genre;
+      spinner.succeed(`Genre detected: ${chalk.green(detection.genre)}`);
+      console.log(chalk.gray(`   Confidence: ${(detection.confidence * 100).toFixed(0)}%`));
+      console.log(chalk.gray(`   Reasoning: ${detection.reasoning}\n`));
+    } catch (error) {
+      spinner.fail('Could not auto-detect genre');
+      console.log(chalk.yellow('⚠  Falling back to manual selection\n'));
+      detectedGenre = undefined;
+    }
+
     // Genre and analysis settings
     const analysisSettings = await inquirer.prompt([
       {
         type: 'list',
         name: 'genre',
-        message: 'Select book genre:',
+        message: detectedGenre ? 'Confirm or change detected genre:' : 'Select book genre:',
+        default: detectedGenre,
         choices: [
           { name: '💻 Technical (Programming, Engineering)', value: 'technical' },
           { name: '🧠 Philosophy (Ethics, Logic, Thought)', value: 'philosophy' },

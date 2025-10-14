@@ -22,7 +22,7 @@ program
   .command('analyze <title>')
   .description('Analyze a book and generate three markdown documents')
   .option('-a, --author <name>', 'Book author (required)', '')
-  .option('-g, --genre <type>', 'Book genre', '')
+  .option('-g, --genre <type>', 'Book genre (auto-detected if not provided)', '')
   .option('-p, --purpose <type>', 'Analysis purpose', 'study')
   .option('--audience <description>', 'Target audience', 'general readers')
   .option('-d, --depth <level>', 'Analysis depth: quick|standard|comprehensive', 'standard')

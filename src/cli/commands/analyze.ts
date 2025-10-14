@@ -1,12 +1,14 @@
 // src/cli/commands/analyze.ts
 
 import { BookAnalyzer } from '../../core/analyzer';
+import { GenreDetector } from '../../core/genre-detector';
 import { AnalysisInput, BookGenre } from '../../types';
 import { Logger } from '../../utils/logger';
 import { Validator } from '../../utils/validator';
 import { openInViewer } from '../../utils/file-opener';
 import chalk from 'chalk';
 import * as fs from 'fs/promises';
+import ora from 'ora';
 
 interface AnalyzeOptions {
   author: string;
@@ -33,17 +35,31 @@ export async function analyzeCommand(title: string, options: AnalyzeOptions) {
       throw new Error('Author name is required. Use -a or --author flag.');
     }
 
-    if (!options.genre) {
-      throw new Error('Genre is required. Use -g or --genre flag.');
-    }
+    // Auto-detect genre if not provided
+    let genre: BookGenre;
 
-    // Validate genre
-    if (!Validator.isValidGenre(options.genre)) {
-      throw new Error(
-        `Invalid genre: ${options.genre}\n` +
-        'Valid genres: technical, philosophy, fiction, academic, business, ' +
-        'self-help, history, science, mathematics, leadership, psychology, biography'
-      );
+    if (!options.genre) {
+      console.log(chalk.blue('\n🔍 Auto-detecting book genre...\n'));
+      const spinner = ora('Analyzing book metadata...').start();
+
+      const genreDetector = new GenreDetector();
+      const detection = await genreDetector.detectGenre(title, options.author);
+
+      spinner.succeed(`Genre detected: ${chalk.green(detection.genre)}`);
+      console.log(chalk.gray(`   Confidence: ${(detection.confidence * 100).toFixed(0)}%`));
+      console.log(chalk.gray(`   Reasoning: ${detection.reasoning}\n`));
+
+      genre = detection.genre;
+    } else {
+      // Validate provided genre
+      if (!Validator.isValidGenre(options.genre)) {
+        throw new Error(
+          `Invalid genre: ${options.genre}\n` +
+          'Valid genres: technical, philosophy, fiction, academic, business, ' +
+          'self-help, history, science, mathematics, leadership, psychology, biography'
+        );
+      }
+      genre = options.genre as BookGenre;
     }
 
     // Read book content if provided
@@ -66,7 +82,7 @@ export async function analyzeCommand(title: string, options: AnalyzeOptions) {
     const input: AnalysisInput = {
       bookTitle: title,
       author: options.author,
-      genre: options.genre as BookGenre,
+      genre: genre,
       purpose: options.purpose as any,
       audience: options.audience,
       analysisDepth: options.depth,
@@ -78,7 +94,7 @@ export async function analyzeCommand(title: string, options: AnalyzeOptions) {
     console.log(chalk.bold.blue('\n📚 bkrptr - Book Analysis\n'));
     console.log(chalk.gray('Book:'), chalk.white(title));
     console.log(chalk.gray('Author:'), chalk.white(options.author));
-    console.log(chalk.gray('Genre:'), chalk.white(options.genre));
+    console.log(chalk.gray('Genre:'), chalk.white(genre));
     console.log(chalk.gray('Depth:'), chalk.white(options.depth));
     console.log(chalk.gray('Purpose:'), chalk.white(options.purpose));
     console.log('');

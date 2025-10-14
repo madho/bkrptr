@@ -13,6 +13,7 @@ Transform ANY book into three actionable Markdown analysis documents using AI. B
 ## Features
 
 - 📖 **Universal** - Works with technical, philosophy, fiction, business, leadership, and more
+- 🤖 **Auto-Detection** - Automatically identifies book genre using AI (or override manually)
 - 🎯 **Genre-Aware** - Custom templates for technical, philosophy, business, and leadership books
 - 🚀 **Fast** - Generate comprehensive analysis in 2-3 minutes
 - 💾 **Organized** - Saves all analyses with metadata for easy retrieval
@@ -85,6 +86,16 @@ Most user-friendly option with guided prompts.
 
 ### Direct Analysis
 
+Genre is now **auto-detected** - just provide title and author:
+
+```bash
+bkrptr analyze "Clean Code" \
+  --author "Robert Martin" \
+  --purpose implementation \
+  --audience "software developers"
+```
+
+Or override the auto-detection:
 ```bash
 bkrptr analyze "Clean Code" \
   --author "Robert Martin" \
@@ -99,7 +110,7 @@ bkrptr analyze "Clean Code" \
 ```bash
 bkrptr analyze <title>
   -a, --author <name>           Book author (required)
-  -g, --genre <type>            Book genre (required)
+  -g, --genre <type>            Book genre (auto-detected if not provided)
   -p, --purpose <type>          Analysis purpose (default: study)
   --audience <description>      Target audience (default: general readers)
   -d, --depth <level>           quick|standard|comprehensive (default: standard)
@@ -226,32 +237,33 @@ Configuration is stored in `.bkrptr/config.json`:
 
 ## Examples
 
-### Technical Book
+### Technical Book (Auto-Detected)
 ```bash
 bkrptr analyze "Design Patterns" \
   --author "Gang of Four" \
-  --genre technical \
   --purpose implementation \
   --audience "software engineers" \
   --focus "creational patterns, structural patterns"
+# Genre will be automatically detected as "technical"
 ```
 
-### Leadership Book
+### Leadership Book (Auto-Detected)
 ```bash
 bkrptr analyze "Extreme Ownership" \
   --author "Jocko Willink" \
-  --genre leadership \
   --purpose professional-development \
   --audience "team leaders"
+# Genre will be automatically detected as "leadership"
 ```
 
-### Philosophy Book
+### Philosophy Book (Override Detection)
 ```bash
 bkrptr analyze "Meditations" \
   --author "Marcus Aurelius" \
   --genre philosophy \
   --purpose study \
   --depth comprehensive
+# Explicitly set genre to override auto-detection
 ```
 
 ## Development
