@@ -4,6 +4,7 @@
 
 import { Command } from 'commander';
 import { analyzeCommand } from './commands/analyze';
+import { batchCommand } from './commands/batch';
 import { interactiveCommand } from './commands/interactive';
 import { listCommand } from './commands/list';
 import { viewCommand } from './commands/view';
@@ -35,6 +36,16 @@ program
   .option('--open', 'Open analysis after generation', false)
   .option('-v, --verbose', 'Verbose logging', false)
   .action(analyzeCommand);
+
+program
+  .command('batch')
+  .description('Analyze multiple books from a CSV or JSON file')
+  .requiredOption('-i, --input <file>', 'Input file (CSV or JSON)')
+  .option('-o, --output-dir <dir>', 'Output directory', './analyses')
+  .option('-d, --depth <level>', 'Analysis depth: quick|standard|comprehensive', 'standard')
+  .option('--parallel', 'Process books in parallel (faster but higher API load)', false)
+  .option('-v, --verbose', 'Verbose logging', false)
+  .action(batchCommand);
 
 program
   .command('interactive')
