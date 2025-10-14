@@ -12,6 +12,84 @@ export class PromptBuilder {
     description: 'Senior executive focused on leadership development in startup and scale-up environments'
   };
 
+  buildMadhoSummaryPrompt(input: AnalysisInput): string {
+    const template = templates.getGenreTemplate(input.genre, 'madhoSummary');
+
+    return `You are creating THE PRIMARY OUTPUT for a book analysis - the MADHO SUMMARY. This is a punchy, voice-driven, actionable summary specifically for a ${this.USER_PERSONA.role} focused on ${this.USER_PERSONA.focus} in ${this.USER_PERSONA.context} environments.
+
+<reader_profile>
+  <role>${this.USER_PERSONA.role}</role>
+  <focus_area>${this.USER_PERSONA.focus}</focus_area>
+  <organizational_context>${this.USER_PERSONA.context}</organizational_context>
+  <purpose>Answer two questions: "Should I read this book?" and "What do I do differently tomorrow?"</purpose>
+</reader_profile>
+
+<book_info>
+  <title>${input.bookTitle}</title>
+  <author>${input.author}</author>
+  <genre>${input.genre}</genre>
+</book_info>
+
+<output_requirements>
+  <document_type>madho_summary</document_type>
+  <format>markdown</format>
+  <word_limit>1000_words_maximum</word_limit>
+  <tone>direct_punchy_actionable</tone>
+
+  <template_structure>
+${template}
+  </template_structure>
+
+  <style_guidelines>
+    <voice_requirements>
+      - Short sentences. Punchy rhythm. Varied pace.
+      - Use "you" not "leaders" or "executives" - write TO the reader
+      - Active verbs only - no passive voice
+      - Zero corporate jargon - if you wouldn't say it in conversation, don't write it
+      - Concrete over abstract - show don't tell
+      - Specific examples from ${this.USER_PERSONA.context} context
+    </voice_requirements>
+
+    <quality_standards>
+      - CONTEXTUAL: Every insight connects to ${this.USER_PERSONA.context} challenges
+      - ACTIONABLE: Reader can implement at least one thing in 24 hours
+      - PSYCHOLOGICAL: Address fears, anxieties, resistance - not just mechanics
+      - HONEST: If the book isn't worth reading, say so and explain why
+      - MEMORABLE: Quotable sentences that stick in the mind
+    </quality_standards>
+
+    <what_to_avoid>
+      - Corporate buzzwords and jargon
+      - Excessive adjectives and adverbs
+      - Hedging language (sort of, kind of, somewhat, perhaps)
+      - Passive voice constructions
+      - Generic statements that could apply to anyone
+      - Abstract principles without concrete examples
+    </what_to_avoid>
+
+    <what_to_embrace>
+      - Direct statements with conviction
+      - Specific examples from startup/scale-up world
+      - Questions that make the reader think
+      - Honest assessment of book's value
+      - Your distinctive voice and perspective
+    </what_to_embrace>
+  </style_guidelines>
+
+  <quality_checks>
+    - [ ] Could reader implement one thing within 24 hours?
+    - [ ] Does this sound like how YOU would actually talk?
+    - [ ] Does every insight connect to building/leading/impact?
+    - [ ] Would a smart 16-year-old understand this?
+    - [ ] Does this save 95% of reading time while capturing 80% of value?
+    - [ ] Is the "Bottom Line" memorable and actionable?
+    - [ ] Would you forward this to a founder friend?
+  </quality_checks>
+</output_requirements>
+
+Generate the MADHO SUMMARY following the template structure. Be direct, punchy, and actionable. Write like you're explaining this to a smart founder over coffee - honest, specific, and practical. This is THE decision tool that answers "Is this worth my time?"`;
+  }
+
   buildDetailedAnalysisPrompt(input: AnalysisInput): string {
     const template = templates.getGenreTemplate(input.genre, 'detailed');
 

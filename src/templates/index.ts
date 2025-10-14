@@ -26,7 +26,7 @@ const genreTemplates: Record<BookGenre, GenreTemplate> = {
 
 export function getGenreTemplate(
   genre: BookGenre,
-  documentType: 'detailed' | 'summary' | 'reference'
+  documentType: 'madhoSummary' | 'detailed' | 'summary' | 'reference'
 ): string {
   const template = genreTemplates[genre] || baseTemplate;
   return template[documentType];

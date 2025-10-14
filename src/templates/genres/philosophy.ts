@@ -3,6 +3,73 @@
 import { GenreTemplate } from '../base';
 
 export const philosophyTemplate: GenreTemplate = {
+  madhoSummary: `# [Book Title] - What Matters for You
+
+## Why This Matters
+
+[50 words: Connect to YOUR challenges. Why care RIGHT NOW?]
+
+---
+
+## The One Big Idea
+
+[75 words: Central philosophical argument + concrete example]
+
+---
+
+## Five Things to Know
+
+**1. [Concept]**: [Statement]
+**So What**: [Application]
+**For You**: [How this changes your thinking]
+
+**2-5**: [Same structure]
+
+---
+
+## Do This Week
+
+1. **[Action]**: [48-hour application] to [outcome]. [Why it matters.]
+2-3: [Same]
+
+---
+
+## How This Changes Your Work
+
+**Your Thinking**: [50 words]
+**Your Decisions**: [50 words]
+**Your Impact**: [50 words]
+
+---
+
+## The Counterintuitive Stuff
+
+**[Shift 1]**: Most believe [X], but [author] argues [Y] because [Z]. [~40 words]
+**[Shift 2]**: [Same]
+
+---
+
+## Worth Remembering
+
+> "[Quote]"
+*Why it matters: [Context]*
+
+[2 more]
+
+---
+
+## Questions for You
+
+1. [Philosophical question]
+2. [Application question]
+3. [Challenge question]
+
+---
+
+**Bottom Line**: [Two sentences]
+
+**Time Investment Worth It?** [Yes/No] - [Reasoning]`,
+
   detailed: `# [Book Title] - Philosophical Analysis
 
 ## Book Information

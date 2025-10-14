@@ -3,6 +3,73 @@
 import { GenreTemplate } from '../base';
 
 export const technicalTemplate: GenreTemplate = {
+  madhoSummary: `# [Book Title] - What Matters for You
+
+## Why This Matters
+
+[50 words: Connect to YOUR technical challenges. Why care RIGHT NOW? Focus on what this enables you to build.]
+
+---
+
+## The One Big Idea
+
+[75 words: Central technical concept + concrete code example]
+
+---
+
+## Five Things to Know
+
+**1. [Concept]**: [Statement]
+**So What**: [How you apply this]
+**For You**: [What you can build]
+
+**2-5**: [Same structure]
+
+---
+
+## Do This Week
+
+1. **[Action]**: [Specific coding task in 48 hours] to [outcome]. [Why it matters.]
+2-3: [Same]
+
+---
+
+## How This Changes Your Work
+
+**Your Projects**: [50 words - how this improves your code/systems]
+**Your Skills**: [50 words - what you can now build]
+**Your Impact**: [50 words - problems you can solve]
+
+---
+
+## The Counterintuitive Stuff
+
+**[Shift 1]**: Most developers believe [X], but book shows [Y] because [Z]. [~40 words]
+**[Shift 2]**: [Same structure]
+
+---
+
+## Worth Remembering
+
+> "[Code principle or quote]"
+*Why it matters: [When you need this]*
+
+[2 more]
+
+---
+
+## Questions for You
+
+1. [Technical question about your projects]
+2. [Implementation question]
+3. [Architecture question]
+
+---
+
+**Bottom Line**: [Two sentences on what you can build with this knowledge]
+
+**Time Investment Worth It?** [Yes/No] - [One sentence reasoning]`,
+
   detailed: `# [Book Title] - Technical Deep Dive
 
 ## Book Information

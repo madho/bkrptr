@@ -3,6 +3,115 @@
 import { GenreTemplate } from '../base';
 
 export const leadershipTemplate: GenreTemplate = {
+  madhoSummary: `# [Book Title] - What Matters for You
+
+## Why This Matters
+
+[50 words: Human impact hook connecting to YOUR current leadership challenges. Single powerful paragraph. Start direct - no fluff. Why should you care about this RIGHT NOW in your scaling journey? Focus on transformation this enables.]
+
+---
+
+## The One Big Idea
+
+[75 words: The book's central argument is [X]. Here's what that means in practice for you: [Concrete example from startup/scale-up world showing this concept in action]. Make it visceral and specific to founder-CEO or VP-level challenges.]
+
+---
+
+## Five Things to Know
+
+**1. [Punchy Insight Name]**: [One clear sentence stating the idea]
+
+**So What**: [One sentence on practical application - what you do differently]
+
+**For You**: [One sentence connecting to your scaling/leadership/team-building work]
+
+**2. [Insight Name]**: [Statement - make it counterintuitive if possible]
+
+**So What**: [Application in your context - founder transition, hiring, culture]
+
+**For You**: [How this solves a problem you have right now]
+
+**3. [Insight Name]**: [Principle that challenges conventional thinking]
+
+**So What**: [What changes when you adopt this view]
+
+**For You**: [Impact on your team's capability or your bandwidth]
+
+**4. [Insight Name]**: [Core psychological or organizational dynamic]
+
+**So What**: [The behavior shift this requires]
+
+**For You**: [What this enables you to stop doing or start achieving]
+
+**5. [Insight Name]**: [Practical framework or tool]
+
+**So What**: [How to apply it this week]
+
+**For You**: [Connection to your current leadership challenges]
+
+---
+
+## Do This Week
+
+**1. [Action Verb] [What]**: [Specific action you can take in 48 hours] to [outcome you'll see] by [specific day]. [One sentence on why this creates immediate value.]
+
+**2. [Action Verb] [What]**: [Concrete step with details] to [measurable result]. [How this builds toward bigger change.]
+
+**3. [Action Verb] [What]**: [Clear next action] to [what you'll learn or achieve]. [Connection to insight above.]
+
+---
+
+## How This Changes Your Work
+
+**Building Your Venture**:
+[50 words: How these concepts apply to your current product, market, or growth challenges. Connect to what you're actively working on. Show how this accelerates your goals or removes constraints.]
+
+**Leading Your Team**:
+[50 words: How this transforms your approach to developing leaders, building culture, or scaling capability. Link to specific pain points: founder bottlenecks, VP effectiveness, team confidence. Include the psychological dimension.]
+
+**Creating Impact**:
+[50 words: Connection to building sustainable organizations, creating meaningful environments, or amplifying your mission. Tie to why you're doing this beyond just scaling metrics.]
+
+---
+
+## The Counterintuitive Stuff
+
+**[Paradigm Shift 1]**: Most startup leaders believe [conventional wisdom], but [Author] argues [contrarian position] because [evidence or reasoning]. [Why this matters for how you lead right now.] [~40 words]
+
+**[Paradigm Shift 2]**: The standard approach to [common challenge] is [X], but this book shows [Y] actually works better because [psychological or organizational dynamic]. [What changes if you adopt this.] [~40 words]
+
+---
+
+## Worth Remembering
+
+> "[Powerful quote that captures core principle - quotable and actionable]"
+
+*Why it matters: [One sentence on when this shows up in your world and why you need to remember it]*
+
+> "[Quote showing psychological insight or organizational dynamic]"
+
+*Why it matters: [One sentence on how this reframes a leadership challenge you face]*
+
+> "[Quote about transformation or what this enables]"
+
+*Why it matters: [One sentence on what this makes possible for your team or company]*
+
+---
+
+## Questions for You
+
+1. [Open-ended question connecting to your specific challenge - e.g., "How does this change your approach to [current issue] as you scale from [X] to [Y]?"]
+
+2. [Question about implementation in your context - e.g., "What would applying [concept] look like in your [specific situation - hiring process, team meetings, 1-on-1s]?"]
+
+3. [Question surfacing resistance - e.g., "Which of your current beliefs about [topic] does this challenge, and what would shift if you embraced this new perspective?"]
+
+---
+
+**Bottom Line**: [Two punchy sentences - the ultimate TL;DR. Answer "what should I do with this?" Make it memorable and action-oriented.]
+
+**Time Investment Worth It?** [Yes/No] - [One sentence reasoning based on your current priorities and challenges]`,
+
   detailed: `# [Book Title] - Leadership Analysis for Startup/Scale-up Leaders
 
 ## Book Information

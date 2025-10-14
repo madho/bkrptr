@@ -49,8 +49,9 @@ export type AnalysisPurpose =
   | 'professional-development';
 
 export interface AnalysisOutput {
-  // Three main documents
+  // Four main documents (MADHO summary is primary)
   documents: {
+    madhoSummary: string;  // Primary: punchy, actionable, voice-driven (REQUIRED)
     detailed: string;      // Chapter-by-chapter or concept-by-concept
     summary: string;       // Executive/conceptual summary
     reference: string;     // Quick reference guide/checklist
@@ -67,6 +68,7 @@ export interface AnalysisOutput {
 
   // File paths
   files: {
+    madhoSummary: string;  // Primary output file
     detailed: string;
     summary: string;
     reference: string;

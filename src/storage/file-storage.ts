@@ -15,19 +15,21 @@ export class FileStorage {
   async saveAnalysis(
     analysis: AnalysisOutput,
     baseDir: string
-  ): Promise<{ detailed: string; summary: string; reference: string; metadata: string }> {
+  ): Promise<{ madhoSummary: string; detailed: string; summary: string; reference: string; metadata: string }> {
     const analysisDir = path.join(baseDir, analysis.metadata.id);
 
     // Create directory
     await fs.mkdir(analysisDir, { recursive: true });
 
     // Save each document
+    const madhoSummaryPath = path.join(analysisDir, 'madho-summary.md');
     const detailedPath = path.join(analysisDir, 'detailed-analysis.md');
     const summaryPath = path.join(analysisDir, 'executive-summary.md');
     const referencePath = path.join(analysisDir, 'quick-reference.md');
     const metadataPath = path.join(analysisDir, 'metadata.json');
 
     await Promise.all([
+      fs.writeFile(madhoSummaryPath, analysis.documents.madhoSummary, 'utf-8'),
       fs.writeFile(detailedPath, analysis.documents.detailed, 'utf-8'),
       fs.writeFile(summaryPath, analysis.documents.summary, 'utf-8'),
       fs.writeFile(referencePath, analysis.documents.reference, 'utf-8'),
@@ -41,6 +43,7 @@ export class FileStorage {
     this.logger.info('Analysis saved to disk', { directory: analysisDir });
 
     return {
+      madhoSummary: madhoSummaryPath,
       detailed: detailedPath,
       summary: summaryPath,
       reference: referencePath,
@@ -52,7 +55,8 @@ export class FileStorage {
     const analysisDir = path.join(baseDir, analysisId);
 
     try {
-      const [detailed, summary, reference, metadataStr] = await Promise.all([
+      const [madhoSummary, detailed, summary, reference, metadataStr] = await Promise.all([
+        fs.readFile(path.join(analysisDir, 'madho-summary.md'), 'utf-8'),
         fs.readFile(path.join(analysisDir, 'detailed-analysis.md'), 'utf-8'),
         fs.readFile(path.join(analysisDir, 'executive-summary.md'), 'utf-8'),
         fs.readFile(path.join(analysisDir, 'quick-reference.md'), 'utf-8'),
@@ -62,9 +66,10 @@ export class FileStorage {
       const metadata = JSON.parse(metadataStr);
 
       return {
-        documents: { detailed, summary, reference },
+        documents: { madhoSummary, detailed, summary, reference },
         metadata,
         files: {
+          madhoSummary: path.join(analysisDir, 'madho-summary.md'),
           detailed: path.join(analysisDir, 'detailed-analysis.md'),
           summary: path.join(analysisDir, 'executive-summary.md'),
           reference: path.join(analysisDir, 'quick-reference.md'),

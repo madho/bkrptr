@@ -1,12 +1,80 @@
 // src/templates/base.ts
 
 export interface GenreTemplate {
+  madhoSummary: string;  // Primary: punchy, voice-driven, actionable
   detailed: string;
   summary: string;
   reference: string;
 }
 
 export const baseTemplate: GenreTemplate = {
+  madhoSummary: `# [Book Title] - What Matters for You
+
+## Why This Matters
+
+[50 words: Connect to human impact. Why care about this RIGHT NOW?]
+
+---
+
+## The One Big Idea
+
+[75 words: Central argument + concrete example from your world]
+
+---
+
+## Five Things to Know
+
+**1. [Insight]**: [Statement]
+**So What**: [Application]
+**For You**: [Connection to your work]
+
+**2-5**: [Same structure]
+
+---
+
+## Do This Week
+
+1. **[Action]**: [Specific 48-hour task] to [outcome]. [Why it matters.]
+2-3: [Same]
+
+---
+
+## How This Changes Your Work
+
+**Your Business**: [50 words]
+**Your Team**: [50 words]
+**Your Impact**: [50 words]
+
+---
+
+## The Counterintuitive Stuff
+
+**[Shift 1]**: Most believe [X], but book argues [Y] because [Z]. [~40 words]
+**[Shift 2]**: [Same structure]
+
+---
+
+## Worth Remembering
+
+> "[Quote]"
+*Why it matters: [One sentence]*
+
+[2 more]
+
+---
+
+## Questions for You
+
+1. [Open question connecting to your challenge]
+2. [Implementation question]
+3. [Resistance question]
+
+---
+
+**Bottom Line**: [Two punchy sentences answering "what should I do with this?"]
+
+**Time Investment Worth It?** [Yes/No] - [One sentence reasoning]`,
+
   detailed: `# [Book Title] - Detailed Analysis
 
 ## Book Information

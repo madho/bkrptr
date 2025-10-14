@@ -57,6 +57,19 @@ export class BookAnalyzer {
     const spinner = options.stream ? null : ora();
 
     try {
+      // Generate MADHO SUMMARY first (PRIMARY OUTPUT)
+      if (spinner) spinner.start('Generating MADHO summary...');
+      if (!spinner) console.log(chalk.blue('\n✨ Generating MADHO summary (primary)...\n'));
+
+      const madhoPrompt = this.promptBuilder.buildMadhoSummaryPrompt(input);
+      const madhoSummary = await this.documentGenerator.generate(
+        madhoPrompt,
+        options.stream
+      );
+
+      if (spinner) spinner.succeed('MADHO summary complete');
+      if (!spinner) console.log(chalk.green('\n✓ MADHO summary complete\n'));
+
       // Generate detailed analysis
       if (spinner) spinner.start('Generating detailed analysis...');
       if (!spinner) console.log(chalk.blue('\n📖 Generating detailed analysis...\n'));
@@ -101,6 +114,7 @@ export class BookAnalyzer {
       // Build output
       const output: AnalysisOutput = {
         documents: {
+          madhoSummary,
           detailed,
           summary,
           reference,
@@ -112,6 +126,7 @@ export class BookAnalyzer {
           generationTime,
         },
         files: {
+          madhoSummary: '',
           detailed: '',
           summary: '',
           reference: '',

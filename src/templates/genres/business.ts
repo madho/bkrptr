@@ -3,6 +3,115 @@
 import { GenreTemplate } from '../base';
 
 export const businessTemplate: GenreTemplate = {
+  madhoSummary: `# [Book Title] - What Matters for You
+
+## Why This Matters
+
+[50 words: Connect to YOUR current business challenges in startup/scale-up context. Why care RIGHT NOW? Focus on transformation this enables for building your venture.]
+
+---
+
+## The One Big Idea
+
+[75 words: The book's central argument is [X]. Here's what that means in practice for you: [Concrete example from startup/scale-up world]. Make it visceral and specific to founder-CEO or business leader challenges.]
+
+---
+
+## Five Things to Know
+
+**1. [Business Insight]**: [One clear sentence]
+
+**So What**: [Practical application for your business]
+
+**For You**: [How this helps you scale/compete/grow]
+
+**2. [Insight]**: [Statement - make it counterintuitive if possible]
+
+**So What**: [Application in your market/product/growth context]
+
+**For You**: [How this solves a problem you face]
+
+**3. [Insight]**: [Principle challenging conventional business thinking]
+
+**So What**: [What changes in your strategy]
+
+**For You**: [Impact on your competitive position or growth trajectory]
+
+**4. [Insight]**: [Core business or market dynamic]
+
+**So What**: [The strategic shift this requires]
+
+**For You**: [What this enables for your venture]
+
+**5. [Insight]**: [Practical framework or tool]
+
+**So What**: [How to apply it this week]
+
+**For You**: [Connection to your current business challenges]
+
+---
+
+## Do This Week
+
+**1. [Action Verb] [What]**: [Specific action in 48 hours] to [business outcome] by [day]. [Why this creates value.]
+
+**2. [Action Verb] [What]**: [Concrete business step] to [measurable result]. [How this builds momentum.]
+
+**3. [Action Verb] [What]**: [Clear next action] to [what you'll achieve]. [Connection to insight above.]
+
+---
+
+## How This Changes Your Work
+
+**Building Your Venture**:
+[50 words: How concepts apply to your product, market, or growth. Connect to active challenges. Show how this accelerates goals or removes constraints.]
+
+**Leading Your Team**:
+[50 words: How this transforms culture, capability, or execution. Link to leadership challenges in scaling context.]
+
+**Creating Impact**:
+[50 words: Connection to building sustainable business, meaningful value creation, or mission amplification.]
+
+---
+
+## The Counterintuitive Stuff
+
+**[Business Paradigm Shift 1]**: Most startup leaders believe [conventional wisdom], but [Author] argues [contrarian position] because [evidence]. [Why this matters for your business.] [~40 words]
+
+**[Business Paradigm Shift 2]**: The standard approach to [challenge] is [X], but this book shows [Y] works better because [dynamic]. [What changes if you adopt this.] [~40 words]
+
+---
+
+## Worth Remembering
+
+> "[Powerful business quote - quotable and actionable]"
+
+*Why it matters: [When this shows up in your business and why remember it]*
+
+> "[Quote about strategy, market dynamics, or execution]"
+
+*Why it matters: [How this reframes a business challenge]*
+
+> "[Quote about transformation or competitive advantage]"
+
+*Why it matters: [What this enables for your company]*
+
+---
+
+## Questions for You
+
+1. [Open question connecting to your business challenge - e.g., "How does this change your approach to [market/product/growth issue]?"]
+
+2. [Question about implementation - e.g., "What would applying [framework] look like for your [business context]?"]
+
+3. [Question surfacing assumptions - e.g., "Which of your current beliefs about [topic] does this challenge?"]
+
+---
+
+**Bottom Line**: [Two punchy sentences - the ultimate TL;DR for your business. Answer "what should I do with this?" Make it actionable.]
+
+**Time Investment Worth It?** [Yes/No] - [One sentence reasoning based on your current business priorities]`,
+
   detailed: `# [Book Title] - Business Strategy Analysis
 
 ## Book Information

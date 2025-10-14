@@ -113,9 +113,10 @@ export async function analyzeCommand(title: string, options: AnalyzeOptions) {
 
     if (options.save) {
       console.log(chalk.bold('📁 Files saved:'));
-      console.log(chalk.gray(`   Detailed: ${result.files.detailed}`));
-      console.log(chalk.gray(`   Summary:  ${result.files.summary}`));
-      console.log(chalk.gray(`   Reference: ${result.files.reference}`));
+      console.log(chalk.bold.cyan(`   ✨ MADHO Summary (PRIMARY): ${result.files.madhoSummary}`));
+      console.log(chalk.gray(`   Detailed Analysis: ${result.files.detailed}`));
+      console.log(chalk.gray(`   Executive Summary: ${result.files.summary}`));
+      console.log(chalk.gray(`   Quick Reference: ${result.files.reference}`));
       console.log('');
     }
 
@@ -124,8 +125,8 @@ export async function analyzeCommand(title: string, options: AnalyzeOptions) {
 
     // Open if requested
     if (options.open && options.save) {
-      console.log(chalk.blue('\n📖 Opening analysis...\n'));
-      await openInViewer(result.files.detailed);
+      console.log(chalk.blue('\n📖 Opening MADHO summary...\n'));
+      await openInViewer(result.files.madhoSummary);
     }
 
     if (options.save) {
