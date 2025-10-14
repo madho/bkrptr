@@ -130,43 +130,47 @@ export const leadershipTemplate: GenreTemplate = {
 ## Chapter-by-Chapter Analysis
 
 ### Chapter 1: [Title]
-**Key Business Concepts**:
-[Main concepts - define precisely, avoid vague language]
 
-**Why This Matters in Scaling Organizations**:
-[Connect explicitly to startup/scale-up challenges: hiring ahead of curve, building culture at speed, limited resources, compressed timelines, founder-to-executive transitions]
+**Opening Context**: [2-3 sentences setting up what this chapter addresses and why it matters]
 
-**Psychological Dynamics**:
-[Explore the inner experience: What fears, anxieties, or identity dynamics drive the behaviors discussed? Why do leaders resist these concepts? What makes this hard psychologically, not just operationally?]
+**Core Framework**: [2-3 sentences describing the main model/concept introduced in this chapter]
 
-**Frameworks & Models**:
-- **[Framework Name]**: [Explain the mental model - how it helps you think, not just what to do]
-  - **When to Apply**: [Specific situations in scaling contexts]
-  - **How to Apply**: [Step-by-step for startup/scale-up leaders]
-  - **Common Pitfalls**: [What goes wrong, especially under growth pressure]
+**Key Insights**: [This should be 3-5 paragraphs of deep analysis exploring:]
+- The central insight and why it's counterintuitive or important
+- How this plays out in startup/scale-up environments specifically
+- The psychological dynamics - why leaders resist this, what anxieties drive behavior
+- How this concept connects to scaling challenges
+- Examples of how this manifests in real organizations
+- The self-reinforcing patterns or vicious cycles this creates
+- What makes this particularly difficult in high-pressure, resource-constrained environments
 
-**Startup/Scale-up Applications**:
-- **Stage: [0-20 people / 20-50 / 50-150 / 150+]**: [How concept applies differently at this stage]
-- **Founder-CEO Context**: [If relevant - how founders specifically should think about this]
-- **VP/Director Context**: [How emerging leaders apply this without full authority]
+**Real-World Application**: [2-3 paragraphs showing concrete examples:]
+- How you see this in your daily work as a startup/scale-up leader
+- Specific situations where you'd apply this (board meetings, team conflicts, hiring decisions, crisis management)
+- What it looks like when you're doing this well vs. poorly
+- Observable signals that you're falling into the trap this chapter warns against
 
-**Leadership Tools**:
-[Specific, usable tools - checklists, conversation frameworks, decision protocols]
+**Critical Examples**: [1-2 paragraphs with specific stories:]
+- Concrete case study from the chapter or analogous startup situation
+- What went wrong and why
+- What the breakthrough looked like
+- Lessons extracted that apply to your context
 
-**Case Studies**:
-[Translate book examples to startup/scale-up equivalents when possible]
+**Leadership Implications**: [2-3 paragraphs on what this means for you:]
+- Why this matters specifically for founder-CEOs, VPs, senior executives in fast-growth
+- How your historical success patterns may now be liabilities
+- What transformation is required - both behavioral and psychological
+- Why this gets harder as you scale, not easier
 
-**Actionable Takeaways**:
-1. [Specific, concrete action - "What do I do Monday morning?"]
-2. [Include both quick-wins and capability-building work]
+**Tactical Takeaways**: [Specific, actionable items:]
+1. [Concrete action you can take this week with specific steps]
+2. [Tool, framework, or practice to implement]
+3. [Question to ask yourself or diagnostic to run]
+4. [Conversation to have or agreement to establish]
 
-**ROI Considerations**:
-[Time investment, resources required, expected benefits in growth context]
+**Connection to Larger Thesis**: [1-2 sentences showing how this chapter builds on previous concepts or sets up what's coming]
 
-**Common Business Challenges**:
-- **[Specific scaling challenge]**: [How this chapter's concepts help]
-
-[Repeat for each chapter]
+[Repeat this full structure for each chapter - aim for 7-10 paragraphs total per chapter]
 
 ## Core Leadership Framework
 [The book's main model or system explained - present as thinking tool, not prescription]
