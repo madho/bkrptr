@@ -1,0 +1,31 @@
+{
+  "defaults": {
+    "outputDir": "./analyses",
+    "analysisDepth": "standard",
+    "parallel": false
+  },
+  "books": [
+    {
+      "bookTitle": "Clean Code",
+      "author": "Robert C. Martin",
+      "genre": "technical",
+      "purpose": "implementation",
+      "audience": "software developers",
+      "analysisDepth": "comprehensive"
+    },
+    {
+      "bookTitle": "The Phoenix Project",
+      "author": "Gene Kim",
+      "genre": "business",
+      "purpose": "study",
+      "audience": "IT managers"
+    },
+    {
+      "bookTitle": "Extreme Ownership",
+      "author": "Jocko Willink",
+      "genre": "leadership",
+      "purpose": "professional-development",
+      "audience": "team leaders"
+    }
+  ]
+}
