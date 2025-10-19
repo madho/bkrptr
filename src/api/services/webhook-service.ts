@@ -1,5 +1,5 @@
 // src/api/services/webhook-service.ts
-import { DatabaseService, Analysis } from '../models/database';
+import { DatabaseService, Analysis } from '../models/database-postgres';
 import { WebhookPayload } from '../types';
 import * as crypto from 'crypto';
 
@@ -18,7 +18,7 @@ export class WebhookService {
     }
 
     // Create webhook record
-    const webhook = this.db.createWebhook({
+    const webhook = await this.db.createWebhook({
       analysis_id: analysis.id,
       url: analysis.webhook_url,
       event_type: eventType,
@@ -35,7 +35,7 @@ export class WebhookService {
     analysis: Analysis,
     eventType: 'analysis.completed' | 'analysis.failed'
   ): Promise<void> {
-    const webhook = this.db.getWebhook(webhookId);
+    const webhook = await this.db.getWebhook(webhookId);
     if (!webhook) {
       return;
     }
@@ -72,7 +72,7 @@ export class WebhookService {
 
       if (response.ok) {
         // Webhook delivered successfully
-        this.db.updateWebhook(webhookId, {
+        await this.db.updateWebhook(webhookId, {
           status: 'sent',
           attempts: webhook.attempts + 1,
           last_attempt_at: new Date().toISOString(),
@@ -93,14 +93,14 @@ export class WebhookService {
     const maxAttempts = 5;
 
     if (attempts >= maxAttempts) {
-      this.db.updateWebhook(webhookId, {
+      await this.db.updateWebhook(webhookId, {
         status: 'failed',
         attempts,
         last_attempt_at: new Date().toISOString(),
       });
       console.log(`Webhook ${webhookId} failed after ${attempts} attempts`);
     } else {
-      this.db.updateWebhook(webhookId, {
+      await this.db.updateWebhook(webhookId, {
         status: 'pending',
         attempts,
         last_attempt_at: new Date().toISOString(),
@@ -111,9 +111,9 @@ export class WebhookService {
       console.log(`Webhook ${webhookId} will retry in ${retryDelay}ms (attempt ${attempts + 1}/${maxAttempts})`);
 
       setTimeout(async () => {
-        const webhook = this.db.getWebhook(webhookId);
+        const webhook = await this.db.getWebhook(webhookId);
         if (webhook) {
-          const analysis = this.db.getAnalysis(webhook.analysis_id);
+          const analysis = await this.db.getAnalysis(webhook.analysis_id);
           if (analysis) {
             await this.attemptWebhookDelivery(webhookId, analysis, webhook.event_type as any);
           }
@@ -140,11 +140,11 @@ export class WebhookService {
   }
 
   async processRetries(): Promise<void> {
-    const pendingWebhooks = this.db.getPendingWebhooks();
+    const pendingWebhooks = await this.db.getPendingWebhooks();
     console.log(`Processing ${pendingWebhooks.length} pending webhooks`);
 
     for (const webhook of pendingWebhooks) {
-      const analysis = this.db.getAnalysis(webhook.analysis_id);
+      const analysis = await this.db.getAnalysis(webhook.analysis_id);
       if (analysis) {
         await this.attemptWebhookDelivery(webhook.id, analysis, webhook.event_type as any);
       }

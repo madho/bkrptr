@@ -1,7 +1,7 @@
 // src/api/routes/analyses.ts
 import { Router, Request, Response } from 'express';
 import { AnalysisService } from '../services/analysis-service';
-import { DatabaseService } from '../models/database';
+import { DatabaseService } from '../models/database-postgres';
 import { validateCreateAnalysis } from '../middleware/validation';
 import { CreateAnalysisRequest, ListAnalysesResponse } from '../types';
 import path from 'path';
@@ -66,7 +66,7 @@ export function createAnalysesRouter(db: DatabaseService, analysisService: Analy
       const status = req.query.status as string | undefined;
 
       const analyses = await analysisService.listAnalyses(limit, offset, status);
-      const total = db.listAnalyses(1000, 0, status).length; // Simple total count
+      const total = await db.countAnalyses(status);
 
       const response: ListAnalysesResponse = {
         data: analyses,
@@ -94,7 +94,7 @@ export function createAnalysesRouter(db: DatabaseService, analysisService: Analy
   router.get('/:id/documents', async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const analysis = db.getAnalysis(id);
+      const analysis = await db.getAnalysis(id);
 
       if (!analysis) {
         return res.status(404).json({
@@ -165,7 +165,7 @@ export function createAnalysesRouter(db: DatabaseService, analysisService: Analy
   router.get('/:id/documents/:type', async (req: Request, res: Response) => {
     try {
       const { id, type } = req.params;
-      const analysis = db.getAnalysis(id);
+      const analysis = await db.getAnalysis(id);
 
       if (!analysis) {
         return res.status(404).json({

@@ -1,6 +1,6 @@
 // src/api/services/analysis-service.ts
 import { BookAnalyzer } from '../../core/analyzer';
-import { DatabaseService, Analysis } from '../models/database';
+import { DatabaseService, Analysis } from '../models/database-postgres';
 import { WebhookService } from './webhook-service';
 import { CreateAnalysisRequest, AnalysisResponse } from '../types';
 import { AnalysisInput } from '../../types';
@@ -20,7 +20,7 @@ export class AnalysisService {
   async createAnalysis(request: CreateAnalysisRequest, idempotencyKey?: string): Promise<AnalysisResponse> {
     // Check for duplicate idempotency key
     if (idempotencyKey) {
-      const existing = this.db.listAnalyses(1, 0).find(a => a.idempotency_key === idempotencyKey);
+      const existing = (await this.db.listAnalyses(1, 0)).find(a => a.idempotency_key === idempotencyKey);
       if (existing) {
         return this.mapToResponse(existing);
       }
@@ -30,7 +30,7 @@ export class AnalysisService {
     const cost = request.options.processingMode === 'batch' ? 0.03 : 0.06;
 
     // Create analysis record
-    const analysis = this.db.createAnalysis({
+    const analysis = await this.db.createAnalysis({
       book_title: request.book.title,
       author: request.book.author,
       genre: request.book.genre || 'business',
@@ -65,12 +65,12 @@ export class AnalysisService {
   }
 
   async getAnalysis(id: string): Promise<AnalysisResponse | null> {
-    const analysis = this.db.getAnalysis(id);
+    const analysis = await this.db.getAnalysis(id);
     return analysis ? this.mapToResponse(analysis) : null;
   }
 
   async listAnalyses(limit: number, offset: number, status?: string): Promise<AnalysisResponse[]> {
-    const analyses = this.db.listAnalyses(limit, offset, status);
+    const analyses = await this.db.listAnalyses(limit, offset, status);
     return analyses.map(a => this.mapToResponse(a));
   }
 
@@ -85,7 +85,7 @@ export class AnalysisService {
         const startTime = Date.now();
 
         // Update status to processing
-        this.db.updateAnalysis(analysisId, {
+        await this.db.updateAnalysis(analysisId, {
           status: 'processing',
           started_at: new Date().toISOString(),
         });
@@ -122,7 +122,7 @@ export class AnalysisService {
 
         // Update analysis with result
         const resultUrl = `/api/v1/analyses/${analysisId}/documents`;
-        this.db.updateAnalysis(analysisId, {
+        await this.db.updateAnalysis(analysisId, {
           status: 'completed',
           result_url: resultUrl,
           processing_time_ms: processingTime,
@@ -130,7 +130,7 @@ export class AnalysisService {
         });
 
         // Send webhook if configured
-        const analysis = this.db.getAnalysis(analysisId)!;
+        const analysis = (await this.db.getAnalysis(analysisId))!;
         if (analysis.webhook_url) {
           await this.webhookService.sendWebhook(analysis, 'analysis.completed');
         }
@@ -140,14 +140,14 @@ export class AnalysisService {
         console.error(`Analysis ${analysisId} failed:`, error);
 
         // Update analysis with error
-        this.db.updateAnalysis(analysisId, {
+        await this.db.updateAnalysis(analysisId, {
           status: 'failed',
           error_message: error instanceof Error ? error.message : 'Unknown error',
           completed_at: new Date().toISOString(),
         });
 
         // Send failure webhook if configured
-        const analysis = this.db.getAnalysis(analysisId);
+        const analysis = await this.db.getAnalysis(analysisId);
         if (analysis?.webhook_url) {
           await this.webhookService.sendWebhook(analysis, 'analysis.failed');
         }

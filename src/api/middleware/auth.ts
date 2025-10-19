@@ -1,6 +1,6 @@
 // src/api/middleware/auth.ts
 import { Request, Response, NextFunction } from 'express';
-import { DatabaseService } from '../models/database';
+import { DatabaseService } from '../models/database-postgres';
 
 export interface AuthenticatedRequest extends Request {
   apiKey?: {
@@ -25,7 +25,7 @@ export function createAuthMiddleware(db: DatabaseService) {
     const apiKey = authHeader.substring(7); // Remove 'Bearer ' prefix
 
     try {
-      const keyRecord = db.validateApiKey(apiKey);
+      const keyRecord = await db.validateApiKey(apiKey);
 
       if (!keyRecord) {
         return res.status(401).json({

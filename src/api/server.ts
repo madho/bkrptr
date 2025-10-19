@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
-import { DatabaseService } from './models/database';
+import { DatabaseService } from './models/database-postgres';
 import { WebhookService } from './services/webhook-service';
 import { AnalysisService } from './services/analysis-service';
 import { createAuthMiddleware } from './middleware/auth';
@@ -52,8 +52,7 @@ export function createServer(): Express {
   });
 
   // Initialize services
-  const dbPath = process.env.DATABASE_PATH || path.join(process.cwd(), 'data', 'bkrptr.db');
-  const db = new DatabaseService(dbPath);
+  const db = new DatabaseService();
   const webhookService = new WebhookService(db, process.env.WEBHOOK_SECRET);
   const analysisService = new AnalysisService(db, webhookService);
 

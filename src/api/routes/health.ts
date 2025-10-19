@@ -1,14 +1,14 @@
 // src/api/routes/health.ts
 import { Router, Request, Response } from 'express';
-import { DatabaseService } from '../models/database';
+import { DatabaseService } from '../models/database-postgres';
 
 export function createHealthRouter(db: DatabaseService): Router {
   const router = Router();
 
-  router.get('/', (req: Request, res: Response) => {
+  router.get('/', async (req: Request, res: Response) => {
     try {
       // Check database connection
-      const analyses = db.listAnalyses(1, 0);
+      await db.listAnalyses(1, 0);
 
       res.json({
         status: 'healthy',
