@@ -7,8 +7,9 @@ import { ConfigLoader } from '../utils/config-loader';
 export class ClaudeClient {
   private client: Anthropic;
   private logger: Logger;
+  private modelId: string;
 
-  constructor() {
+  constructor(modelId: string = 'claude-sonnet-4-5-20250929') {
     const configLoader = new ConfigLoader();
     const apiKey = configLoader.getApiKey();
 
@@ -22,20 +23,25 @@ export class ClaudeClient {
 
     this.client = new Anthropic({ apiKey });
     this.logger = new Logger();
+    this.modelId = modelId;
   }
 
   async generateWithStreaming(
     prompt: string,
     onChunk?: (text: string) => void
-  ): Promise<string> {
+  ): Promise<{ content: string; usage?: { input_tokens: number; output_tokens: number } }> {
     this.logger.debug('Starting streaming generation');
 
     let fullResponse = '';
+    let usage: { input_tokens: number; output_tokens: number } | undefined;
+
+    // Set max_tokens based on model capabilities
+    const maxTokens = this.modelId.includes('haiku') ? 8192 : 16000;
 
     try {
       const stream = await this.client.messages.stream({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 16000,
+        model: this.modelId,
+        max_tokens: maxTokens,
         temperature: 1,
         messages: [{
           role: 'user',
@@ -54,7 +60,19 @@ export class ClaudeClient {
         }
       }
 
-      return fullResponse;
+      // Get final message with usage stats
+      const finalMessage = await stream.finalMessage();
+      if (finalMessage.usage) {
+        usage = {
+          input_tokens: finalMessage.usage.input_tokens,
+          output_tokens: finalMessage.usage.output_tokens
+        };
+      }
+
+      return {
+        content: fullResponse,
+        usage
+      };
 
     } catch (error: any) {
       this.logger.error('Streaming generation failed', error);
@@ -65,10 +83,13 @@ export class ClaudeClient {
   async generate(prompt: string): Promise<{ content: string; usage?: { input_tokens: number; output_tokens: number } }> {
     this.logger.debug('Starting generation');
 
+    // Set max_tokens based on model capabilities
+    const maxTokens = this.modelId.includes('haiku') ? 8192 : 16000;
+
     try {
       const response = await this.client.messages.create({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 16000,
+        model: this.modelId,
+        max_tokens: maxTokens,
         temperature: 1,
         messages: [{
           role: 'user',

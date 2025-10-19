@@ -16,14 +16,20 @@ export class DocumentGenerator {
 
   async generate(prompt: string, stream: boolean = false): Promise<GenerationResult> {
     if (stream) {
-      const content = await this.claudeClient.generateWithStreaming(
+      const result = await this.claudeClient.generateWithStreaming(
         prompt,
         (chunk) => {
           // Stream output to terminal
           process.stdout.write(chalk.gray(chunk));
         }
       );
-      return { content };
+      return {
+        content: result.content,
+        usage: result.usage ? {
+          inputTokens: result.usage.input_tokens,
+          outputTokens: result.usage.output_tokens
+        } : undefined
+      };
     } else {
       const result = await this.claudeClient.generate(prompt);
       return {

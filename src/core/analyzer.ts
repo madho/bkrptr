@@ -23,9 +23,11 @@ export class BookAnalyzer {
   private documentGenerator: DocumentGenerator;
   private storage: FileStorage;
   private logger: Logger;
+  private modelId: string;
 
-  constructor() {
-    this.claudeClient = new ClaudeClient();
+  constructor(modelId: string = 'claude-sonnet-4-5-20250929') {
+    this.modelId = modelId;
+    this.claudeClient = new ClaudeClient(modelId);
     this.promptBuilder = new PromptBuilder();
     this.documentGenerator = new DocumentGenerator(this.claudeClient);
     this.storage = new FileStorage();
@@ -131,9 +133,16 @@ export class BookAnalyzer {
 
       const generationTime = Date.now() - startTime;
 
-      // Calculate costs (Claude Sonnet 4 pricing)
-      const INPUT_COST_PER_MILLION = 3.00;  // $3 per million input tokens
-      const OUTPUT_COST_PER_MILLION = 15.00; // $15 per million output tokens
+      // Calculate costs based on model
+      const modelPricing: Record<string, { input: number; output: number }> = {
+        'claude-sonnet-4-5-20250929': { input: 3.00, output: 15.00 },
+        'claude-sonnet-4-20250514': { input: 3.00, output: 15.00 },
+        'claude-3-5-haiku-20241022': { input: 1.00, output: 5.00 }
+      };
+
+      const pricing = modelPricing[this.modelId] || { input: 3.00, output: 15.00 };
+      const INPUT_COST_PER_MILLION = pricing.input;
+      const OUTPUT_COST_PER_MILLION = pricing.output;
       const totalTokens = totalInputTokens + totalOutputTokens;
       const estimatedCost =
         (totalInputTokens / 1_000_000) * INPUT_COST_PER_MILLION +
@@ -197,6 +206,13 @@ export class BookAnalyzer {
   private generateAnalysisId(input: AnalysisInput): string {
     const slug = Validator.sanitizeFilename(input.bookTitle);
     const date = new Date().toISOString().split('T')[0];
-    return `${slug}-${date}`;
+
+    // Extract short model name for the ID
+    const modelShortName = this.modelId.includes('haiku-4.5') || this.modelId.includes('3-5-haiku') ? 'haiku-4.5' :
+                           this.modelId.includes('sonnet-4-5') ? 'sonnet-4.5' :
+                           this.modelId.includes('sonnet-4') ? 'sonnet-4' :
+                           'unknown';
+
+    return `${slug}-${modelShortName}-${date}`;
   }
 }

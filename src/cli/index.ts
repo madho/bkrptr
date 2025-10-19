@@ -31,6 +31,7 @@ program
   .option('-i, --input <file>', 'Book content file path')
   .option('-o, --output-dir <dir>', 'Output directory', './analyses')
   .option('--focus <areas>', 'Comma-separated focus areas')
+  .option('-m, --model <name>', 'Claude model: sonnet-4.5|haiku-4.5|sonnet-4|haiku-3.5', 'sonnet-4.5')
   .option('--stream', 'Stream output to terminal', false)
   .option('--no-save', 'Don\'t save to disk')
   .option('--open', 'Open analysis after generation', false)

@@ -5,6 +5,10 @@ import { GenreTemplate } from '../base';
 export const leadershipTemplate: GenreTemplate = {
   madhoSummary: `# [Book Title] - What Matters for You
 
+## What's In It For Me?
+
+[25-30 words: Immediate hook question format like Blinkist. Answer: "Discover/Learn how to [transformation]" - make it visceral and urgent. Example: "Discover how to build unshakeable character that makes your team trust you in crises, customers choose you over competitors, and investors bet on you for the long haul."]
+
 ## Why This Matters
 
 [50 words: Human impact hook connecting to YOUR current leadership challenges. Single powerful paragraph. Start direct - no fluff. Why should you care about this RIGHT NOW in your scaling journey? Focus on transformation this enables.]
@@ -19,7 +23,11 @@ export const leadershipTemplate: GenreTemplate = {
 
 ## Five Things to Know
 
+IMPORTANT: Each insight should include a concrete example from the book (a story, case study, or the author's experience) to make it memorable. Reference specific people, situations, or organizations from the book.
+
 **1. [Punchy Insight Name]**: [One clear sentence stating the idea]
+
+[1-2 sentences: Concrete example from the book showing this in action - e.g., "McChrystal learned this when...", "The author witnessed this in Afghanistan when...", "Consider the Juul Labs story where..."]
 
 **So What**: [One sentence on practical application - what you do differently]
 
@@ -27,11 +35,15 @@ export const leadershipTemplate: GenreTemplate = {
 
 **2. [Insight Name]**: [Statement - make it counterintuitive if possible]
 
+[1-2 sentences: Specific story/example from book demonstrating this principle]
+
 **So What**: [Application in your context - founder transition, hiring, culture]
 
 **For You**: [How this solves a problem you have right now]
 
 **3. [Insight Name]**: [Principle that challenges conventional thinking]
+
+[1-2 sentences: Book example - author's personal experience, historical figure profiled, research cited]
 
 **So What**: [What changes when you adopt this view]
 
@@ -39,11 +51,15 @@ export const leadershipTemplate: GenreTemplate = {
 
 **4. [Insight Name]**: [Core psychological or organizational dynamic]
 
+[1-2 sentences: Concrete example or case study from the book]
+
 **So What**: [The behavior shift this requires]
 
 **For You**: [What this enables you to stop doing or start achieving]
 
 **5. [Insight Name]**: [Practical framework or tool]
+
+[1-2 sentences: How the author or someone in the book applied this successfully/unsuccessfully]
 
 **So What**: [How to apply it this week]
 

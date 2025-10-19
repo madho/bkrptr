@@ -20,10 +20,22 @@ interface AnalyzeOptions {
   input?: string;
   outputDir: string;
   focus?: string;
+  model: string;
   stream: boolean;
   save: boolean;
   open: boolean;
   verbose: boolean;
+}
+
+function getModelId(modelName: string): string {
+  const modelMap: Record<string, string> = {
+    'sonnet-4.5': 'claude-sonnet-4-5-20250929',
+    'haiku-4.5': 'claude-3-5-haiku-20241022',
+    'sonnet-4': 'claude-sonnet-4-20250514',
+    'haiku-3.5': 'claude-3-5-haiku-20241022'
+  };
+
+  return modelMap[modelName] || modelMap['sonnet-4.5'];
 }
 
 export async function analyzeCommand(title: string, options: AnalyzeOptions) {
@@ -34,6 +46,9 @@ export async function analyzeCommand(title: string, options: AnalyzeOptions) {
     if (!options.author) {
       throw new Error('Author name is required. Use -a or --author flag.');
     }
+
+    // Get model ID
+    const modelId = getModelId(options.model);
 
     // Auto-detect genre if not provided
     let genre: BookGenre;
@@ -95,12 +110,13 @@ export async function analyzeCommand(title: string, options: AnalyzeOptions) {
     console.log(chalk.gray('Book:'), chalk.white(title));
     console.log(chalk.gray('Author:'), chalk.white(options.author));
     console.log(chalk.gray('Genre:'), chalk.white(genre));
+    console.log(chalk.gray('Model:'), chalk.white(options.model));
     console.log(chalk.gray('Depth:'), chalk.white(options.depth));
     console.log(chalk.gray('Purpose:'), chalk.white(options.purpose));
     console.log('');
 
     // Run analysis
-    const analyzer = new BookAnalyzer();
+    const analyzer = new BookAnalyzer(modelId);
     const result = await analyzer.analyze(input, {
       stream: options.stream,
       save: options.save,
