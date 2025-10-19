@@ -58,7 +58,7 @@ This guide covers deploying the bkrptr dashboard to Vercel.
    - Set up and deploy? **Y**
    - Which scope? Select your account
    - Link to existing project? **N**
-   - What's your project's name? `bkrptr-dashboard`
+   - What's your project's name? `bkrptr`
    - In which directory is your code located? `./`
    - Want to override settings? **N**
 

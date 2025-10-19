@@ -2,9 +2,9 @@
 
 ## 🚀 Deployment Status
 
-✅ **Deployed to Vercel**: https://dashboard-prototype-7xw99q1rt-madhos-projects.vercel.app
+✅ **Deployed to Vercel**: https://bkrptr.vercel.app
 ✅ **GitHub Repository**: https://github.com/madho/bkrptr
-✅ **Project**: dashboard-prototype (madhos-projects)
+✅ **Project**: bkrptr (madhos-projects)
 
 ## DNS Records Required
 
@@ -112,7 +112,7 @@ These might be pointing to old hosting providers.
 
 ### Step 6: Verify in Vercel Dashboard
 
-1. Go to: https://vercel.com/madhos-projects/dashboard-prototype
+1. Go to: https://vercel.com/madhos-projects/bkrptr
 2. Click "Domains" tab
 3. You should see: `bkrptr.com` listed
 4. Status should show: **Valid** or **Configured**
@@ -275,7 +275,7 @@ Then configure redirect in Vercel:
 
 ### Add Domain in Vercel
 
-1. Visit: https://vercel.com/madhos-projects/dashboard-prototype
+1. Visit: https://vercel.com/madhos-projects/bkrptr
 2. Click "Domains" tab
 3. Click "Add" or "Add Domain"
 4. Enter: **bkrptr.com**
@@ -316,7 +316,7 @@ Once DNS propagates, test:
 
 ## Current Deployment URLs
 
-**Temporary Vercel URL**: https://dashboard-prototype-7xw99q1rt-madhos-projects.vercel.app
+**Production Vercel URL**: https://bkrptr.vercel.app
 
 **Custom Domain** (after DNS setup):
 - Primary: https://bkrptr.com
@@ -332,7 +332,7 @@ Once DNS propagates, test:
 
 **Need help?**
 - Check Vercel deployment logs: `vercel logs`
-- View domain status: https://vercel.com/madhos-projects/dashboard-prototype/settings/domains
+- View domain status: https://vercel.com/madhos-projects/bkrptr/settings/domains
 - Contact Vercel support if domain won't verify after 48 hours
 
 ---
