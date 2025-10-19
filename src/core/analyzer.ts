@@ -216,3 +216,5 @@ export class BookAnalyzer {
     return `${slug}-${modelShortName}-${date}`;
   }
 }
+
+export default BookAnalyzer;

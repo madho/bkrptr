@@ -108,3 +108,7 @@ export interface GenreDetection {
   confidence: number;
   reasoning: string;
 }
+
+export default {
+  // Type-only module, exported for module resolution
+};
