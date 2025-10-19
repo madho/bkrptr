@@ -40,3 +40,8 @@ export function listAvailableGenres(): Array<{ genre: BookGenre; hasCustomTempla
 }
 
 export { GenreTemplate };
+
+export default {
+  getGenreTemplate,
+  listAvailableGenres,
+};
