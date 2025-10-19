@@ -1,0 +1,1206 @@
+openapi: 3.2.0
+info:
+  title: bkrptr API
+  version: 1.0.0
+  description: |
+    AI-powered book analysis service API. Submit books for comprehensive analysis and receive
+    four document types: MADHO Summary, Detailed Analysis, Executive Summary, and Quick Reference.
+
+    ## Authentication
+    All API requests require authentication via API key in the `X-API-Key` header.
+
+    ## Processing Modes
+    - **Batch**: $0.03/book, ~24 hours processing time
+    - **Expedited**: $0.06/book, ~9 minutes processing time
+
+    ## Rate Limiting
+    Rate limits are enforced per API key. Check response headers for current limits.
+
+  contact:
+    name: bkrptr API Support
+    email: api@bkrptr.com
+    url: https://bkrptr.com/support
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://bkrptr.com/terms
+
+servers:
+  - url: https://api.bkrptr.com/v1
+    description: Production server
+  - url: https://sandbox-api.bkrptr.com/v1
+    description: Sandbox server (test environment)
+
+security:
+  - ApiKeyAuth: []
+
+tags:
+  - name: Analyses
+    description: Book analysis operations
+  - name: Documents
+    description: Document retrieval operations
+  - name: Webhooks
+    description: Webhook configuration and management
+  - name: Account
+    description: Account and usage operations
+  - name: Admin
+    description: Administrative operations (requires admin privileges)
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication
+
+  schemas:
+    # Core Book Schema
+    BookInput:
+      type: object
+      required:
+        - title
+        - author
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 500
+          example: "Atomic Habits"
+          description: Book title
+        author:
+          type: string
+          minLength: 1
+          maxLength: 500
+          example: "James Clear"
+          description: Book author(s)
+        isbn:
+          type: string
+          pattern: '^(97[89])?[0-9]{9}[0-9X]$'
+          example: "9780735211292"
+          description: ISBN-10 or ISBN-13
+        genre:
+          type: string
+          enum: [self-help, business, fiction, non-fiction, technology, science, history, biography, philosophy, psychology, economics, politics, education, health, spirituality, other]
+          example: "self-help"
+          description: Book genre/category
+
+    # Analysis Request Schema
+    AnalysisRequest:
+      type: object
+      required:
+        - book
+      properties:
+        book:
+          $ref: '#/components/schemas/BookInput'
+        options:
+          $ref: '#/components/schemas/AnalysisOptions'
+        webhook:
+          $ref: '#/components/schemas/WebhookConfig'
+        idempotencyKey:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: "unique-request-id-123"
+          description: Unique key for idempotent requests
+
+    AnalysisOptions:
+      type: object
+      properties:
+        processingMode:
+          type: string
+          enum: [batch, expedited]
+          default: batch
+          description: Processing speed preference
+        analysisDepth:
+          type: string
+          enum: [quick, standard, comprehensive]
+          default: standard
+          description: Depth of analysis
+        targetAudience:
+          type: string
+          enum: [general, business-professionals, students, researchers, educators]
+          default: general
+          description: Target audience for analysis
+        additionalContext:
+          type: string
+          maxLength: 1000
+          example: "Focus on productivity and habit formation techniques"
+          description: Additional context to guide analysis
+
+    WebhookConfig:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          format: uri
+          example: "https://example.com/webhooks/bkrptr"
+          description: Webhook endpoint URL (must be HTTPS)
+        events:
+          type: array
+          items:
+            type: string
+            enum: [analysis.started, analysis.completed, analysis.failed, document.generated]
+          default: [analysis.completed, analysis.failed]
+          description: Events to subscribe to
+        secret:
+          type: string
+          minLength: 16
+          description: Shared secret for webhook signature verification
+
+    # Analysis Response Schema
+    Analysis:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "ana_xyz789abc"
+          description: Unique analysis identifier
+        book:
+          $ref: '#/components/schemas/BookInput'
+        status:
+          type: string
+          enum: [pending, processing, completed, failed, cancelled]
+          description: Current analysis status
+        options:
+          $ref: '#/components/schemas/AnalysisOptions'
+        submittedAt:
+          type: string
+          format: date-time
+          description: Submission timestamp
+        startedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Processing start timestamp
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Completion timestamp
+        estimatedCompletion:
+          type: string
+          format: date-time
+          description: Estimated completion time
+        processingTime:
+          type: integer
+          description: Processing time in seconds
+          nullable: true
+        cost:
+          type: number
+          format: float
+          example: 0.03
+          description: Cost in USD
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+          description: Available documents (when completed)
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+          nullable: true
+          description: Error details if failed
+
+    Document:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [madho-summary, detailed-analysis, executive-summary, quick-reference]
+          description: Document type
+        url:
+          type: string
+          format: uri
+          example: "https://api.bkrptr.com/v1/analyses/ana_xyz789/documents/madho-summary"
+          description: Document download URL
+        size:
+          type: integer
+          description: File size in bytes
+        format:
+          type: string
+          enum: [markdown, pdf, docx, html]
+          default: markdown
+          description: Document format
+        generatedAt:
+          type: string
+          format: date-time
+          description: Generation timestamp
+
+    # Webhook Schemas
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Webhook identifier
+        url:
+          type: string
+          format: uri
+          description: Webhook endpoint URL
+        events:
+          type: array
+          items:
+            type: string
+          description: Subscribed events
+        active:
+          type: boolean
+          default: true
+          description: Webhook active status
+        secret:
+          type: string
+          description: Shared secret (masked in responses)
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        lastTriggeredAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last trigger timestamp
+        failureCount:
+          type: integer
+          description: Consecutive failure count
+
+    WebhookEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "evt_123abc"
+          description: Event identifier
+        type:
+          type: string
+          enum: [analysis.started, analysis.completed, analysis.failed, document.generated]
+          description: Event type
+        created:
+          type: integer
+          format: int64
+          description: Unix timestamp
+        data:
+          type: object
+          description: Event-specific data
+        signature:
+          type: string
+          example: "sha256=abc123..."
+          description: HMAC signature
+
+    # Account Schemas
+    AccountInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        plan:
+          type: string
+          enum: [free, standard, premium, enterprise]
+        apiKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiKey'
+        createdAt:
+          type: string
+          format: date-time
+
+    ApiKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Production API Key"
+        key:
+          type: string
+          description: API key (only shown once on creation)
+        keyPrefix:
+          type: string
+          example: "bkrptr_live_k3x9..."
+          description: Key prefix for identification
+        permissions:
+          type: array
+          items:
+            type: string
+            enum: [analyses.read, analyses.write, webhooks.manage, account.read, admin]
+        rateLimit:
+          type: integer
+          example: 1000
+          description: Requests per hour
+        createdAt:
+          type: string
+          format: date-time
+        lastUsedAt:
+          type: string
+          format: date-time
+          nullable: true
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    UsageStats:
+      type: object
+      properties:
+        period:
+          type: object
+          properties:
+            start:
+              type: string
+              format: date-time
+            end:
+              type: string
+              format: date-time
+        totalAnalyses:
+          type: integer
+          example: 150
+        totalCost:
+          type: number
+          format: float
+          example: 4.50
+        byMode:
+          type: object
+          properties:
+            batch:
+              $ref: '#/components/schemas/UsageBreakdown'
+            expedited:
+              $ref: '#/components/schemas/UsageBreakdown'
+        byStatus:
+          type: object
+          properties:
+            completed:
+              type: integer
+            failed:
+              type: integer
+            processing:
+              type: integer
+            pending:
+              type: integer
+
+    UsageBreakdown:
+      type: object
+      properties:
+        count:
+          type: integer
+        cost:
+          type: number
+          format: float
+
+    # Error Schemas
+    Error:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+
+    ErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "INVALID_REQUEST"
+        message:
+          type: string
+          example: "Missing required field: title"
+        details:
+          type: object
+          additionalProperties: true
+        requestId:
+          type: string
+          format: uuid
+
+    # Pagination Schema
+    PaginationMeta:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 150
+        page:
+          type: integer
+          example: 1
+        perPage:
+          type: integer
+          example: 25
+        pages:
+          type: integer
+          example: 6
+        hasMore:
+          type: boolean
+        cursor:
+          type: string
+          nullable: true
+
+  responses:
+    UnauthorizedError:
+      description: Authentication failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "UNAUTHORIZED"
+              message: "Invalid or missing API key"
+
+    ForbiddenError:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "FORBIDDEN"
+              message: "Insufficient permissions for this operation"
+
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "NOT_FOUND"
+              message: "Analysis not found"
+
+    RateLimitError:
+      description: Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "RATE_LIMIT_EXCEEDED"
+              message: "Rate limit exceeded. Please retry after reset time."
+              details:
+                retryAfter: 3600
+
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: "VALIDATION_ERROR"
+              message: "Request validation failed"
+              details:
+                fields:
+                  title: "Title is required"
+
+paths:
+  # Analysis Operations
+  /analyses:
+    post:
+      tags:
+        - Analyses
+      summary: Submit new book analysis
+      operationId: createAnalysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisRequest'
+            examples:
+              batch:
+                summary: Batch processing request
+                value:
+                  book:
+                    title: "Atomic Habits"
+                    author: "James Clear"
+                    isbn: "9780735211292"
+                    genre: "self-help"
+                  options:
+                    processingMode: "batch"
+                    analysisDepth: "standard"
+                    targetAudience: "general"
+                  webhook:
+                    url: "https://example.com/webhooks/bkrptr"
+                    events: ["analysis.completed", "analysis.failed"]
+                  idempotencyKey: "unique-123"
+              expedited:
+                summary: Expedited processing request
+                value:
+                  book:
+                    title: "The Lean Startup"
+                    author: "Eric Ries"
+                  options:
+                    processingMode: "expedited"
+      responses:
+        '201':
+          description: Analysis created successfully
+          headers:
+            Location:
+              schema:
+                type: string
+              description: URL of created resource
+            X-Idempotency-Key:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analysis'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+
+    get:
+      tags:
+        - Analyses
+      summary: List analyses
+      operationId: listAnalyses
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, processing, completed, failed, cancelled]
+          description: Filter by status
+        - name: processingMode
+          in: query
+          schema:
+            type: string
+            enum: [batch, expedited]
+          description: Filter by processing mode
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter analyses submitted after this date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter analyses submitted before this date
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number
+        - name: perPage
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 25
+          description: Items per page
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [submittedAt, completedAt, title, status]
+            default: submittedAt
+          description: Sort field
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Sort order
+      responses:
+        '200':
+          description: List of analyses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Analysis'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+
+  /analyses/{analysisId}:
+    parameters:
+      - name: analysisId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Analysis identifier
+
+    get:
+      tags:
+        - Analyses
+      summary: Get analysis details
+      operationId: getAnalysis
+      responses:
+        '200':
+          description: Analysis details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analysis'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+    delete:
+      tags:
+        - Analyses
+      summary: Cancel pending analysis
+      operationId: cancelAnalysis
+      description: Only pending or processing analyses can be cancelled
+      responses:
+        '204':
+          description: Analysis cancelled successfully
+        '400':
+          description: Analysis cannot be cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /analyses/{analysisId}/status:
+    parameters:
+      - name: analysisId
+        in: path
+        required: true
+        schema:
+          type: string
+
+    get:
+      tags:
+        - Analyses
+      summary: Check analysis status
+      operationId: getAnalysisStatus
+      description: Lightweight endpoint for status polling
+      responses:
+        '200':
+          description: Current status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [pending, processing, completed, failed, cancelled]
+                  percentComplete:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                  estimatedCompletion:
+                    type: string
+                    format: date-time
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /analyses/{analysisId}/expedite:
+    parameters:
+      - name: analysisId
+        in: path
+        required: true
+        schema:
+          type: string
+
+    post:
+      tags:
+        - Analyses
+      summary: Upgrade to expedited processing
+      operationId: expediteAnalysis
+      description: Upgrade a batch analysis to expedited processing
+      responses:
+        '200':
+          description: Successfully upgraded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analysisId:
+                    type: string
+                  previousMode:
+                    type: string
+                    enum: [batch]
+                  newMode:
+                    type: string
+                    enum: [expedited]
+                  additionalCost:
+                    type: number
+                    format: float
+                  estimatedCompletion:
+                    type: string
+                    format: date-time
+        '400':
+          description: Cannot expedite
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  # Document Operations
+  /analyses/{analysisId}/documents:
+    parameters:
+      - name: analysisId
+        in: path
+        required: true
+        schema:
+          type: string
+
+    get:
+      tags:
+        - Documents
+      summary: List available documents
+      operationId: listDocuments
+      responses:
+        '200':
+          description: Document list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Document'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /analyses/{analysisId}/documents/{documentType}:
+    parameters:
+      - name: analysisId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum: [madho-summary, detailed-analysis, executive-summary, quick-reference]
+        description: Document type
+
+    get:
+      tags:
+        - Documents
+      summary: Download specific document
+      operationId: getDocument
+      parameters:
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [markdown, pdf, docx, html]
+            default: markdown
+          description: Download format
+      responses:
+        '200':
+          description: Document content
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              example: 'attachment; filename="atomic-habits-madho-summary.md"'
+          content:
+            text/markdown:
+              schema:
+                type: string
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
+            text/html:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /analyses/{analysisId}/documents/download:
+    parameters:
+      - name: analysisId
+        in: path
+        required: true
+        schema:
+          type: string
+
+    get:
+      tags:
+        - Documents
+      summary: Download all documents as ZIP
+      operationId: downloadAllDocuments
+      parameters:
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [markdown, pdf, docx, html]
+            default: markdown
+          description: Document format in ZIP
+      responses:
+        '200':
+          description: ZIP archive
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              example: 'attachment; filename="atomic-habits-analysis.zip"'
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  # Webhook Operations
+  /webhooks:
+    post:
+      tags:
+        - Webhooks
+      summary: Register webhook endpoint
+      operationId: createWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - url
+                - events
+              properties:
+                url:
+                  type: string
+                  format: uri
+                events:
+                  type: array
+                  items:
+                    type: string
+                    enum: [analysis.started, analysis.completed, analysis.failed, document.generated]
+                secret:
+                  type: string
+                  minLength: 16
+      responses:
+        '201':
+          description: Webhook created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    get:
+      tags:
+        - Webhooks
+      summary: List registered webhooks
+      operationId: listWebhooks
+      responses:
+        '200':
+          description: Webhook list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhooks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /webhooks/{webhookId}:
+    parameters:
+      - name: webhookId
+        in: path
+        required: true
+        schema:
+          type: string
+
+    put:
+      tags:
+        - Webhooks
+      summary: Update webhook
+      operationId: updateWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+                events:
+                  type: array
+                  items:
+                    type: string
+                active:
+                  type: boolean
+      responses:
+        '200':
+          description: Webhook updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+    delete:
+      tags:
+        - Webhooks
+      summary: Delete webhook
+      operationId: deleteWebhook
+      responses:
+        '204':
+          description: Webhook deleted
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /webhooks/{webhookId}/test:
+    parameters:
+      - name: webhookId
+        in: path
+        required: true
+        schema:
+          type: string
+
+    post:
+      tags:
+        - Webhooks
+      summary: Test webhook delivery
+      operationId: testWebhook
+      description: Send a test event to the webhook endpoint
+      responses:
+        '200':
+          description: Test result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  statusCode:
+                    type: integer
+                  responseTime:
+                    type: integer
+                    description: Response time in milliseconds
+                  error:
+                    type: string
+                    nullable: true
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  # Account Operations
+  /account:
+    get:
+      tags:
+        - Account
+      summary: Get account information
+      operationId: getAccount
+      responses:
+        '200':
+          description: Account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInfo'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /account/usage:
+    get:
+      tags:
+        - Account
+      summary: Get usage statistics
+      operationId: getUsage
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Start date (YYYY-MM-DD)
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+          description: End date (YYYY-MM-DD)
+        - name: groupBy
+          in: query
+          schema:
+            type: string
+            enum: [day, week, month]
+            default: month
+          description: Grouping period
+      responses:
+        '200':
+          description: Usage statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageStats'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /account/keys:
+    get:
+      tags:
+        - Admin
+      summary: List API keys
+      operationId: listApiKeys
+      description: Requires admin privileges
+      responses:
+        '200':
+          description: API key list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ApiKey'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+    post:
+      tags:
+        - Admin
+      summary: Generate new API key
+      operationId: createApiKey
+      description: Requires admin privileges
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: "Production API Key"
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    enum: [analyses.read, analyses.write, webhooks.manage, account.read]
+                rateLimit:
+                  type: integer
+                  minimum: 10
+                  maximum: 10000
+                  default: 1000
+                expiresAt:
+                  type: string
+                  format: date-time
+                  nullable: true
+      responses:
+        '201':
+          description: API key created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKey'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /account/keys/{keyId}:
+    parameters:
+      - name: keyId
+        in: path
+        required: true
+        schema:
+          type: string
+
+    delete:
+      tags:
+        - Admin
+      summary: Revoke API key
+      operationId: revokeApiKey
+      description: Requires admin privileges
+      responses:
+        '204':
+          description: API key revoked
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
