@@ -3,7 +3,7 @@ import { createServer } from './server';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || '3000', 10);
 
 // Ensure data directories exist
 const dataDir = path.join(process.cwd(), 'data');
@@ -18,7 +18,7 @@ const analysesDir = path.join(dataDir, 'analyses');
 // Create and start server
 const app = createServer();
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`
 ┌─────────────────────────────────────────┐
 │                                         │
@@ -26,6 +26,7 @@ const server = app.listen(PORT, () => {
 │                                         │
 │   Status: Running ✓                     │
 │   Port: ${PORT}                          │
+│   Host: 0.0.0.0                         │
 │   Environment: ${process.env.NODE_ENV || 'development'}           │
 │                                         │
 │   Endpoints:                            │
