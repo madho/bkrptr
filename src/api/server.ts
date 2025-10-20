@@ -10,6 +10,7 @@ import { AnalysisService } from './services/analysis-service';
 import { createAuthMiddleware } from './middleware/auth';
 import { createAnalysesRouter } from './routes/analyses';
 import { createHealthRouter } from './routes/health';
+import { createAdminRouter } from './routes/admin';
 
 export function createServer(): Express {
   const app = express();
@@ -58,6 +59,9 @@ export function createServer(): Express {
 
   // Public routes (no auth required)
   app.use('/api/v1/health', createHealthRouter(db));
+
+  // Admin routes (protected by secret)
+  app.use('/api/v1/admin', createAdminRouter(db));
 
   // Protected routes (auth required)
   const authMiddleware = createAuthMiddleware(db);
