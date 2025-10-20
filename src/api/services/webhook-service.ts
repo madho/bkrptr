@@ -1,5 +1,5 @@
 // src/api/services/webhook-service.ts
-import { DatabaseService, Analysis } from '../models/database-postgres';
+import { DatabaseService, Analysis } from '../models/database';
 import { WebhookPayload } from '../types';
 import * as crypto from 'crypto';
 

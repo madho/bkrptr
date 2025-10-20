@@ -1,6 +1,6 @@
 // src/api/middleware/auth.ts
 import { Request, Response, NextFunction } from 'express';
-import { DatabaseService } from '../models/database-postgres';
+import { DatabaseService } from '../models/database';
 
 export interface AuthenticatedRequest extends Request {
   apiKey?: {

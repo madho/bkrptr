@@ -1,7 +1,7 @@
 // src/api/routes/analyses.ts
 import { Router, Request, Response } from 'express';
 import { AnalysisService } from '../services/analysis-service';
-import { DatabaseService } from '../models/database-postgres';
+import { DatabaseService } from '../models/database';
 import { validateCreateAnalysis } from '../middleware/validation';
 import { CreateAnalysisRequest, ListAnalysesResponse } from '../types';
 import path from 'path';

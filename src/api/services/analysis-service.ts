@@ -1,6 +1,6 @@
 // src/api/services/analysis-service.ts
 import { BookAnalyzer } from '../../core/analyzer';
-import { DatabaseService, Analysis } from '../models/database-postgres';
+import { DatabaseService, Analysis } from '../models/database';
 import { WebhookService } from './webhook-service';
 import { CreateAnalysisRequest, AnalysisResponse } from '../types';
 import { AnalysisInput } from '../../types';

@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
-import { DatabaseService } from './models/database-postgres';
+import { DatabaseService } from './models/database';
 import { WebhookService } from './services/webhook-service';
 import { AnalysisService } from './services/analysis-service';
 import { createAuthMiddleware } from './middleware/auth';

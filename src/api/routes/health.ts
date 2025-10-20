@@ -1,6 +1,6 @@
 // src/api/routes/health.ts
 import { Router, Request, Response } from 'express';
-import { DatabaseService } from '../models/database-postgres';
+import { DatabaseService } from '../models/database';
 
 export function createHealthRouter(db: DatabaseService): Router {
   const router = Router();
