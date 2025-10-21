@@ -1,0 +1,70 @@
+{
+  "id": "origins-of-efficiency-2025-10-21",
+  "title": "The Origins of Efficiency",
+  "author": "Brian Potter",
+  "genre": "business",
+  "subgenres": ["economics", "history", "industrial"],
+  "purpose": "study",
+  "audience": "professionals, entrepreneurs, policymakers, students",
+  "depth": "comprehensive",
+  "analysisDate": "2025-10-21T18:17:00.000Z",
+  "focusAreas": [
+    "industrial efficiency history",
+    "construction productivity",
+    "manufacturing vs construction",
+    "technology adoption",
+    "regulatory impact",
+    "workforce development",
+    "prefabrication and modular construction"
+  ],
+  "keyThemes": [
+    "Context-dependent efficiency",
+    "Manufacturing-construction divergence",
+    "Scientific management evolution",
+    "Technology limitations",
+    "Industry structure impact",
+    "Regulatory trade-offs"
+  ],
+  "documentTypes": {
+    "detailed": "detailed-analysis.md",
+    "summary": "executive-summary.md",
+    "reference": "quick-reference.md"
+  },
+  "stats": {
+    "wordCount": {
+      "detailed": 8500,
+      "summary": 3200,
+      "reference": 2800
+    },
+    "readingTime": {
+      "detailed": "35 minutes",
+      "summary": "12 minutes",
+      "reference": "10 minutes"
+    }
+  },
+  "tags": [
+    "construction",
+    "manufacturing",
+    "productivity",
+    "efficiency",
+    "innovation",
+    "technology",
+    "regulation",
+    "labor",
+    "prefabrication",
+    "modular",
+    "BIM",
+    "lean manufacturing",
+    "Toyota",
+    "Ford",
+    "Taylor"
+  ],
+  "relatedBooks": [
+    "The Second Machine Age by Brynjolfsson & McAfee",
+    "The Machine That Changed the World by Womack, Jones & Roos",
+    "How Buildings Learn by Stewart Brand",
+    "Order Without Design by Alain Bertaud"
+  ],
+  "generator": "Claude Code",
+  "version": "1.0"
+}
