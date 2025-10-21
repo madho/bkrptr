@@ -9,7 +9,7 @@ export function createAdminRouter(db: DatabaseService): Router {
   const router = Router();
 
   // Create API key endpoint - protected by WEBHOOK_SECRET env var
-  router.post('/create-key', (req: Request, res: Response) => {
+  router.post('/create-key', async (req: Request, res: Response) => {
     const secret = req.headers['x-admin-secret'];
 
     if (secret !== process.env.WEBHOOK_SECRET) {
@@ -23,7 +23,7 @@ export function createAdminRouter(db: DatabaseService): Router {
     }
 
     try {
-      const { apiKey, record } = db.createApiKey(name);
+      const { apiKey, record } = await db.createApiKey(name);
 
       res.json({
         success: true,
