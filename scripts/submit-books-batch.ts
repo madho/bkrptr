@@ -12,7 +12,7 @@ interface Book {
 }
 
 const API_URL = 'https://api.bkrptr.com';
-const API_KEY = 'bkrptr_live_OsUVzr-an2JhFe6uDpxWa0xQUdCGvN3n';
+const API_KEY = 'bkrptr_live_P4oqLbCWGwckyotMeXBAHI4H8TWKsO7J';
 
 // Map categories to genres
 const categoryToGenre: Record<string, string> = {
