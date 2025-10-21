@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { DatabaseService } from './models/database';
 import { WebhookService } from './services/webhook-service';
+import { StorageService } from './services/storage-service';
 import { AnalysisService } from './services/analysis-service';
 import { createAuthMiddleware } from './middleware/auth';
 import { createAnalysesRouter } from './routes/analyses';
@@ -71,7 +72,8 @@ export function createServer(): Express {
   // Initialize services
   const db = new DatabaseService();
   const webhookService = new WebhookService(db, process.env.WEBHOOK_SECRET);
-  const analysisService = new AnalysisService(db, webhookService);
+  const storageService = new StorageService();
+  const analysisService = new AnalysisService(db, webhookService, storageService);
 
   // Public routes (no auth required)
   app.use('/api/v1/health', createHealthRouter(db));
@@ -81,7 +83,7 @@ export function createServer(): Express {
 
   // Protected routes (auth required)
   const authMiddleware = createAuthMiddleware(db);
-  app.use('/api/v1/analyses', authMiddleware, createAnalysesRouter(db, analysisService));
+  app.use('/api/v1/analyses', authMiddleware, createAnalysesRouter(db, analysisService, storageService));
 
   // Root endpoint
   app.get('/', (req: Request, res: Response) => {

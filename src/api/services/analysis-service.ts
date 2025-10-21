@@ -2,6 +2,7 @@
 import { BookAnalyzer } from '../../core/analyzer';
 import { DatabaseService, Analysis } from '../models/database';
 import { WebhookService } from './webhook-service';
+import { StorageService } from './storage-service';
 import { CreateAnalysisRequest, AnalysisResponse } from '../types';
 import { AnalysisInput } from '../../types';
 import path from 'path';
@@ -9,11 +10,13 @@ import path from 'path';
 export class AnalysisService {
   private db: DatabaseService;
   private webhookService: WebhookService;
+  private storageService: StorageService;
   private processingQueue: Map<string, Promise<void>>;
 
-  constructor(db: DatabaseService, webhookService: WebhookService) {
+  constructor(db: DatabaseService, webhookService: WebhookService, storageService: StorageService) {
     this.db = db;
     this.webhookService = webhookService;
+    this.storageService = storageService;
     this.processingQueue = new Map();
   }
 
@@ -119,6 +122,16 @@ export class AnalysisService {
         });
 
         const processingTime = Date.now() - startTime;
+
+        // Upload documents to Supabase Storage
+        console.log(`Uploading documents to Supabase Storage for ${analysisId}...`);
+        try {
+          await this.storageService.uploadAllDocuments(analysisId, result.documents);
+          console.log(`✅ Documents uploaded successfully for ${analysisId}`);
+        } catch (uploadError) {
+          console.error(`⚠️ Failed to upload documents to Supabase for ${analysisId}:`, uploadError);
+          // Continue anyway - documents are still on local filesystem as fallback
+        }
 
         // Update analysis with result
         const resultUrl = `/api/v1/analyses/${analysisId}/documents`;

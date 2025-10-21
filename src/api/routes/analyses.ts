@@ -1,13 +1,14 @@
 // src/api/routes/analyses.ts
 import { Router, Request, Response } from 'express';
 import { AnalysisService } from '../services/analysis-service';
+import { StorageService } from '../services/storage-service';
 import { DatabaseService } from '../models/database';
 import { validateCreateAnalysis } from '../middleware/validation';
 import { CreateAnalysisRequest, ListAnalysesResponse } from '../types';
 import path from 'path';
 import fs from 'fs/promises';
 
-export function createAnalysesRouter(db: DatabaseService, analysisService: AnalysisService): Router {
+export function createAnalysesRouter(db: DatabaseService, analysisService: AnalysisService, storageService: StorageService): Router {
   const router = Router();
 
   // Create new analysis
@@ -114,25 +115,33 @@ export function createAnalysesRouter(db: DatabaseService, analysisService: Analy
         });
       }
 
-      // Read documents from filesystem
-      const docsDir = path.join(process.cwd(), 'data', 'analyses', id);
-
+      // Try to read documents from Supabase Storage first, fallback to filesystem
       try {
-        const [madhoSummary, detailed, summary, reference] = await Promise.all([
-          fs.readFile(path.join(docsDir, 'MADHO_SUMMARY.md'), 'utf-8'),
-          fs.readFile(path.join(docsDir, 'DETAILED_ANALYSIS.md'), 'utf-8'),
-          fs.readFile(path.join(docsDir, 'SUMMARY.md'), 'utf-8'),
-          fs.readFile(path.join(docsDir, 'QUICK_REFERENCE.md'), 'utf-8'),
-        ]);
+        let documents;
+
+        try {
+          // Try Supabase Storage first
+          documents = await storageService.downloadAllDocuments(id);
+          console.log(`✅ Documents fetched from Supabase for ${id}`);
+        } catch (supabaseError) {
+          console.log(`⚠️ Supabase fetch failed for ${id}, trying local filesystem...`);
+
+          // Fallback to local filesystem
+          const docsDir = path.join(process.cwd(), 'data', 'analyses', id);
+          const [madhoSummary, detailed, summary, reference] = await Promise.all([
+            fs.readFile(path.join(docsDir, 'MADHO_SUMMARY.md'), 'utf-8'),
+            fs.readFile(path.join(docsDir, 'DETAILED_ANALYSIS.md'), 'utf-8'),
+            fs.readFile(path.join(docsDir, 'SUMMARY.md'), 'utf-8'),
+            fs.readFile(path.join(docsDir, 'QUICK_REFERENCE.md'), 'utf-8'),
+          ]);
+
+          documents = { madhoSummary, detailed, summary, reference };
+          console.log(`✅ Documents fetched from filesystem for ${id}`);
+        }
 
         res.json({
           id: analysis.id,
-          documents: {
-            madhoSummary,
-            detailed,
-            summary,
-            reference,
-          },
+          documents,
           metadata: {
             bookTitle: analysis.book_title,
             author: analysis.author,
@@ -141,8 +150,8 @@ export function createAnalysesRouter(db: DatabaseService, analysisService: Analy
             cost: analysis.cost,
           },
         });
-      } catch (fileError) {
-        console.error('Error reading document files:', fileError);
+      } catch (error) {
+        console.error('Error reading document files:', error);
         res.status(500).json({
           error: {
             code: 'DOCUMENTS_NOT_FOUND',
@@ -202,8 +211,17 @@ export function createAnalysesRouter(db: DatabaseService, analysisService: Analy
         });
       }
 
-      const filePath = path.join(process.cwd(), 'data', 'analyses', id, fileName);
-      const content = await fs.readFile(filePath, 'utf-8');
+      // Try Supabase Storage first, fallback to filesystem
+      let content;
+      try {
+        content = await storageService.downloadDocument(id, fileName);
+        console.log(`✅ Document ${fileName} fetched from Supabase for ${id}`);
+      } catch (supabaseError) {
+        console.log(`⚠️ Supabase fetch failed for ${id}/${fileName}, trying local filesystem...`);
+        const filePath = path.join(process.cwd(), 'data', 'analyses', id, fileName);
+        content = await fs.readFile(filePath, 'utf-8');
+        console.log(`✅ Document ${fileName} fetched from filesystem for ${id}`);
+      }
 
       res.type('text/markdown').send(content);
     } catch (error) {
