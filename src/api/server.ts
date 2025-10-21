@@ -26,7 +26,7 @@ export function createServer(): Express {
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true }));
 
-  // Rate limiting
+  // Rate limiting - skip for authenticated/internal requests
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // 100 requests per windowMs
@@ -38,6 +38,22 @@ export function createServer(): Express {
     },
     standardHeaders: true,
     legacyHeaders: false,
+    skip: (req: Request) => {
+      // Skip rate limiting for authenticated API requests (has valid API key)
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        return true;
+      }
+
+      // Skip rate limiting for admin requests (has admin secret)
+      const adminSecret = req.headers['x-admin-secret'];
+      if (adminSecret && adminSecret === process.env.WEBHOOK_SECRET) {
+        return true;
+      }
+
+      // Apply rate limiting to all other requests
+      return false;
+    },
   });
 
   app.use('/api/', limiter);
