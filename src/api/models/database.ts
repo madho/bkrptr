@@ -85,8 +85,17 @@ export class DatabaseService {
 
       if (fs.existsSync(schemaPath)) {
         const schema = fs.readFileSync(schemaPath, 'utf-8');
-        await client.query(schema);
-        console.log('✅ Database schema initialized');
+        try {
+          await client.query(schema);
+          console.log('✅ Database schema initialized');
+        } catch (error: any) {
+          // Ignore "already exists" errors (42P07 = duplicate table, 42710 = duplicate object)
+          if (error.code === '42P07' || error.code === '42710') {
+            console.log('✅ Database schema already exists');
+          } else {
+            throw error;
+          }
+        }
       } else {
         console.warn('⚠️  Schema file not found, skipping initialization');
       }
