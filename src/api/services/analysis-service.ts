@@ -187,9 +187,9 @@ export class AnalysisService {
     // Reset analysis to queued state
     await this.db.updateAnalysis(analysisId, {
       status: 'queued',
-      error_message: null,
-      completed_at: null,
-      started_at: null,
+      error_message: undefined,
+      completed_at: undefined,
+      started_at: undefined,
     });
 
     // Reconstruct the original request from the database record
