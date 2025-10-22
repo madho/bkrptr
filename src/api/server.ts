@@ -79,7 +79,7 @@ export function createServer(): Express {
   app.use('/api/v1/health', createHealthRouter(db));
 
   // Admin routes (protected by secret)
-  app.use('/api/v1/admin', createAdminRouter(db));
+  app.use('/api/v1/admin', createAdminRouter(db, analysisService));
 
   // Protected routes (auth required)
   const authMiddleware = createAuthMiddleware(db);

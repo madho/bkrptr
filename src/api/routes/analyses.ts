@@ -62,7 +62,7 @@ export function createAnalysesRouter(db: DatabaseService, analysisService: Analy
   // List analyses
   router.get('/', async (req: Request, res: Response) => {
     try {
-      const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
+      const limit = Math.min(parseInt(req.query.limit as string) || 50, 500);
       const offset = parseInt(req.query.offset as string) || 0;
       const status = req.query.status as string | undefined;
 

@@ -173,6 +173,81 @@ export class AnalysisService {
     return processingPromise;
   }
 
+  async retryAnalysis(analysisId: string): Promise<AnalysisResponse> {
+    const analysis = await this.db.getAnalysis(analysisId);
+
+    if (!analysis) {
+      throw new Error(`Analysis ${analysisId} not found`);
+    }
+
+    if (analysis.status !== 'failed') {
+      throw new Error(`Analysis ${analysisId} is not in failed state (current: ${analysis.status})`);
+    }
+
+    // Reset analysis to queued state
+    await this.db.updateAnalysis(analysisId, {
+      status: 'queued',
+      error_message: null,
+      completed_at: null,
+      started_at: null,
+    });
+
+    // Reconstruct the original request from the database record
+    const request: CreateAnalysisRequest = {
+      book: {
+        title: analysis.book_title,
+        author: analysis.author,
+        genre: analysis.genre || 'business',
+      },
+      options: {
+        processingMode: analysis.processing_mode as 'batch' | 'expedited',
+        purpose: analysis.purpose as any,
+        audience: analysis.audience || 'general audience',
+      },
+      webhookUrl: analysis.webhook_url,
+    };
+
+    // Start processing (non-blocking) - NO CHARGE for retry
+    this.processAnalysis(analysisId, request).catch(error => {
+      console.error(`Failed to retry analysis ${analysisId}:`, error);
+    });
+
+    const updatedAnalysis = await this.db.getAnalysis(analysisId);
+    return this.mapToResponse(updatedAnalysis!);
+  }
+
+  async retryFailedAnalyses(onlyDeploymentFailures: boolean = true): Promise<{ retried: number; skipped: number; errors: string[] }> {
+    const errors: string[] = [];
+    let retried = 0;
+    let skipped = 0;
+
+    // Get all failed analyses
+    const failedAnalyses = await this.db.listAnalyses(500, 0, 'failed');
+
+    for (const analysis of failedAnalyses) {
+      try {
+        // If onlyDeploymentFailures is true, only retry analyses with no error message
+        // (these likely failed due to deployment restart)
+        if (onlyDeploymentFailures && analysis.error_message) {
+          skipped++;
+          continue;
+        }
+
+        await this.retryAnalysis(analysis.id);
+        retried++;
+
+        // Add small delay to avoid overwhelming the system
+        await new Promise(resolve => setTimeout(resolve, 100));
+      } catch (error) {
+        const errorMsg = `Failed to retry ${analysis.id}: ${error instanceof Error ? error.message : 'Unknown error'}`;
+        errors.push(errorMsg);
+        console.error(errorMsg);
+      }
+    }
+
+    return { retried, skipped, errors };
+  }
+
   private mapToResponse(analysis: Analysis): AnalysisResponse {
     const estimatedTime = analysis.processing_mode === 'batch'
       ? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours

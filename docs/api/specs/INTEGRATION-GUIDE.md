@@ -483,11 +483,17 @@ class BkrptrClient:
     def list_analyses(
         self,
         status: Optional[str] = None,
-        page: int = 1,
-        per_page: int = 25
+        limit: int = 50,
+        offset: int = 0
     ) -> Dict[str, Any]:
-        """List analyses with optional filters."""
-        params = {"page": page, "perPage": per_page}
+        """List analyses with optional filters.
+
+        Args:
+            status: Filter by status (queued, processing, completed, failed)
+            limit: Number of results per page (default: 50, max: 500)
+            offset: Number of results to skip (default: 0)
+        """
+        params = {"limit": limit, "offset": offset}
         if status:
             params["status"] = status
 
@@ -703,9 +709,15 @@ curl -X POST https://api.bkrptr.com/v1/analyses \
 #### List Analyses with Filters
 
 ```bash
-curl -X GET "https://api.bkrptr.com/v1/analyses?status=completed&page=1&perPage=10&sortBy=completedAt&sortOrder=desc" \
+# Pagination uses limit (default: 50, max: 500) and offset (default: 0)
+curl -X GET "https://api.bkrptr.com/v1/analyses?status=completed&limit=100&offset=0" \
   -H "X-API-Key: YOUR_API_KEY"
 ```
+
+**Query Parameters:**
+- `limit` (optional): Number of results per page. Default: 50, Max: 500
+- `offset` (optional): Number of results to skip. Default: 0
+- `status` (optional): Filter by status (`queued`, `processing`, `completed`, `failed`)
 
 #### Expedite an Analysis
 
