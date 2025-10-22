@@ -20,23 +20,27 @@ async function retryFailedAnalyses() {
     const failedAnalyses = await db.listAnalyses(500, 0, 'failed');
     console.log(`Found ${failedAnalyses.length} failed analyses\n`);
 
-    // Filter for deployment failures only (those with null error_message)
+    // Check if we should retry all failures or just deployment failures
+    const retryAll = process.env.RETRY_ALL === 'true';
+
     const deploymentFailures = failedAnalyses.filter(a => !a.error_message);
     const otherFailures = failedAnalyses.filter(a => a.error_message);
 
-    console.log(`  - ${deploymentFailures.length} deployment failures (will retry)`);
-    console.log(`  - ${otherFailures.length} other failures (will skip)\n`);
+    console.log(`  - ${deploymentFailures.length} deployment failures`);
+    console.log(`  - ${otherFailures.length} other failures\n`);
 
-    if (deploymentFailures.length === 0) {
-      console.log('✅ No deployment failures to retry!');
+    const toRetry = retryAll ? failedAnalyses : deploymentFailures;
+
+    if (toRetry.length === 0) {
+      console.log('✅ No failures to retry!');
       return;
     }
 
-    console.log('Starting retries...\n');
+    console.log(`Retrying ${toRetry.length} analyses...\n`);
     let retried = 0;
     let errors = 0;
 
-    for (const analysis of deploymentFailures) {
+    for (const analysis of toRetry) {
       try {
         console.log(`  Retrying: ${analysis.book_title} by ${analysis.author} (${analysis.id})`);
         await analysisService.retryAnalysis(analysis.id);

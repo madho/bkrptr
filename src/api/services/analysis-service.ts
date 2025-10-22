@@ -18,6 +18,76 @@ export class AnalysisService {
     this.webhookService = webhookService;
     this.storageService = storageService;
     this.processingQueue = new Map();
+
+    // Recover stuck analyses on startup
+    this.recoverStuckAnalyses().catch(error => {
+      console.error('Failed to recover stuck analyses:', error);
+    });
+  }
+
+  /**
+   * Recovers analyses stuck in "processing" state (likely due to deployment restart)
+   * Resets analyses that have been processing for more than 30 minutes back to "queued"
+   */
+  private async recoverStuckAnalyses(): Promise<void> {
+    try {
+      const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+
+      // Find analyses stuck in processing for > 30 minutes
+      const allProcessing = await this.db.listAnalyses(500, 0, 'processing');
+      const stuckAnalyses = allProcessing.filter(a =>
+        a.started_at && a.started_at < thirtyMinutesAgo
+      );
+
+      if (stuckAnalyses.length === 0) {
+        console.log('✅ No stuck analyses found');
+        return;
+      }
+
+      console.log(`🔄 Found ${stuckAnalyses.length} stuck analyses, recovering...`);
+
+      for (const analysis of stuckAnalyses) {
+        try {
+          // Reset to queued state
+          await this.db.updateAnalysis(analysis.id, {
+            status: 'queued',
+            started_at: undefined,
+          });
+
+          // Reconstruct request and retry
+          const request: CreateAnalysisRequest = {
+            book: {
+              title: analysis.book_title,
+              author: analysis.author,
+              genre: analysis.genre || 'business',
+            },
+            options: {
+              processingMode: analysis.processing_mode as 'batch' | 'expedited',
+              purpose: analysis.purpose as any,
+              audience: analysis.audience || 'general audience',
+            },
+            webhookUrl: analysis.webhook_url,
+          };
+
+          // Start processing (non-blocking)
+          this.processAnalysis(analysis.id, request).catch(error => {
+            console.error(`Failed to recover analysis ${analysis.id}:`, error);
+          });
+
+          console.log(`  ✓ Recovered: ${analysis.book_title} by ${analysis.author}`);
+
+          // Small delay to avoid overwhelming the system
+          await new Promise(resolve => setTimeout(resolve, 100));
+        } catch (error) {
+          console.error(`  ✗ Failed to recover ${analysis.id}:`, error);
+        }
+      }
+
+      console.log(`✅ Recovery complete: ${stuckAnalyses.length} analyses requeued`);
+    } catch (error) {
+      console.error('Error during stuck analysis recovery:', error);
+      throw error;
+    }
   }
 
   async createAnalysis(request: CreateAnalysisRequest, idempotencyKey?: string): Promise<AnalysisResponse> {
