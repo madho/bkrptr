@@ -3,6 +3,7 @@ import { BookAnalyzer } from '../../core/analyzer';
 import { DatabaseService, Analysis } from '../models/database';
 import { WebhookService } from './webhook-service';
 import { StorageService } from './storage-service';
+import { AnalysisQueue, QueueItem } from './analysis-queue';
 import { CreateAnalysisRequest, AnalysisResponse } from '../types';
 import { AnalysisInput } from '../../types';
 import path from 'path';
@@ -11,6 +12,7 @@ export class AnalysisService {
   private db: DatabaseService;
   private webhookService: WebhookService;
   private storageService: StorageService;
+  private analysisQueue: AnalysisQueue;
   private processingQueue: Map<string, Promise<void>>;
 
   constructor(db: DatabaseService, webhookService: WebhookService, storageService: StorageService) {
@@ -18,6 +20,10 @@ export class AnalysisService {
     this.webhookService = webhookService;
     this.storageService = storageService;
     this.processingQueue = new Map();
+
+    // Initialize queue with max 3 concurrent analyses
+    // This prevents rate limit issues (90K tokens/min ÷ ~30K per analysis = ~3 concurrent)
+    this.analysisQueue = new AnalysisQueue(3);
 
     // Recover stuck analyses on startup
     this.recoverStuckAnalyses().catch(error => {
@@ -69,9 +75,12 @@ export class AnalysisService {
             webhookUrl: analysis.webhook_url,
           };
 
-          // Start processing (non-blocking)
-          this.processAnalysis(analysis.id, request).catch(error => {
-            console.error(`Failed to recover analysis ${analysis.id}:`, error);
+          // Add to queue with controlled concurrency
+          this.analysisQueue.enqueue({
+            id: analysis.id,
+            priority: analysis.processing_mode as 'batch' | 'expedited',
+            retryCount: 0,
+            execute: () => this.executeAnalysis(analysis.id, request)
           });
 
           console.log(`  ✓ Recovered: ${analysis.book_title} by ${analysis.author}`);
@@ -116,23 +125,14 @@ export class AnalysisService {
       cost,
     });
 
-    // Process based on mode
-    if (request.options.processingMode === 'expedited') {
-      // Start processing immediately (non-blocking)
-      this.processAnalysis(analysis.id, request).catch(error => {
-        console.error(`Failed to process analysis ${analysis.id}:`, error);
-      });
-    } else {
-      // Queue for batch processing
-      console.log(`Analysis ${analysis.id} queued for batch processing`);
-      // In production, this would add to a proper queue (Bull, BeeQueue, etc.)
-      // For now, we'll process after a delay to simulate batch
-      setTimeout(() => {
-        this.processAnalysis(analysis.id, request).catch(error => {
-          console.error(`Failed to process analysis ${analysis.id}:`, error);
-        });
-      }, 5000); // 5 second delay to simulate batch queue
-    }
+    // Add to queue with controlled concurrency
+    const priority = request.options.processingMode;
+    this.analysisQueue.enqueue({
+      id: analysis.id,
+      priority,
+      retryCount: 0,
+      execute: () => this.executeAnalysis(analysis.id, request)
+    });
 
     return this.mapToResponse(analysis);
   }
@@ -147,8 +147,8 @@ export class AnalysisService {
     return analyses.map(a => this.mapToResponse(a));
   }
 
-  private async processAnalysis(analysisId: string, request: CreateAnalysisRequest): Promise<void> {
-    // Prevent duplicate processing
+  private async executeAnalysis(analysisId: string, request: CreateAnalysisRequest): Promise<void> {
+    // Note: Queue already prevents duplicates, but keep this as extra safety
     if (this.processingQueue.has(analysisId)) {
       return this.processingQueue.get(analysisId);
     }
@@ -277,9 +277,13 @@ export class AnalysisService {
       webhookUrl: analysis.webhook_url,
     };
 
-    // Start processing (non-blocking) - NO CHARGE for retry
-    this.processAnalysis(analysisId, request).catch(error => {
-      console.error(`Failed to retry analysis ${analysisId}:`, error);
+    // Add to queue with controlled concurrency - NO CHARGE for retry
+    const priority = request.options.processingMode;
+    this.analysisQueue.enqueue({
+      id: analysisId,
+      priority,
+      retryCount: 0,
+      execute: () => this.executeAnalysis(analysisId, request)
     });
 
     const updatedAnalysis = await this.db.getAnalysis(analysisId);
