@@ -1,7 +1,17 @@
 // src/api/models/database-postgres.ts
 import { sql } from '@vercel/postgres';
-import { nanoid } from 'nanoid';
 import * as crypto from 'crypto';
+
+// Dynamic import for nanoid to support Vercel serverless environment
+let nanoidInstance: any = null;
+async function getNanoid() {
+  if (!nanoidInstance) {
+    // Use customAlphabet from nanoid for consistent behavior
+    const { customAlphabet } = await import('nanoid');
+    nanoidInstance = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_-', 21);
+  }
+  return nanoidInstance;
+}
 
 export interface Analysis {
   id: string;
@@ -135,7 +145,8 @@ export class DatabaseService {
   async createAnalysis(analysis: Omit<Analysis, 'id' | 'created_at' | 'updated_at'>): Promise<Analysis> {
     await this.ensureInitialized();
 
-    const id = `ana_${nanoid(21)}`;
+    const nanoid = await getNanoid();
+    const id = `ana_${nanoid()}`;
     const now = new Date().toISOString();
 
     const { rows } = await sql`
@@ -233,8 +244,9 @@ export class DatabaseService {
   async createApiKey(name: string): Promise<{ apiKey: string; record: ApiKey }> {
     await this.ensureInitialized();
 
-    const id = `key_${nanoid(16)}`;
-    const apiKey = `bkrptr_live_${nanoid(32)}`;
+    const nanoid = await getNanoid();
+    const id = `key_${nanoid()}`;
+    const apiKey = `bkrptr_live_${nanoid()}`;
     const keyHash = crypto.createHash('sha256').update(apiKey).digest('hex');
     const keyPrefix = apiKey.substring(0, 12) + '...';
     const now = new Date().toISOString();
@@ -291,7 +303,8 @@ export class DatabaseService {
   async createWebhook(webhook: Omit<Webhook, 'id' | 'created_at'>): Promise<Webhook> {
     await this.ensureInitialized();
 
-    const id = `wh_${nanoid(21)}`;
+    const nanoid = await getNanoid();
+    const id = `wh_${nanoid()}`;
     const now = new Date().toISOString();
 
     const { rows } = await sql`
