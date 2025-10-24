@@ -25,9 +25,13 @@ export class AnalysisService {
     // This prevents rate limit issues (90K tokens/min ÷ ~30K per analysis = ~3 concurrent)
     this.analysisQueue = new AnalysisQueue(3);
 
-    // Recover stuck analyses on startup
+    // Recover stuck analyses and process queued analyses on startup
     this.recoverStuckAnalyses().catch(error => {
       console.error('Failed to recover stuck analyses:', error);
+    });
+
+    this.processQueuedAnalyses().catch(error => {
+      console.error('Failed to process queued analyses:', error);
     });
   }
 
@@ -95,6 +99,63 @@ export class AnalysisService {
       console.log(`✅ Recovery complete: ${stuckAnalyses.length} analyses requeued`);
     } catch (error) {
       console.error('Error during stuck analysis recovery:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Processes existing queued analyses on startup
+   * Picks up any analyses in "queued" state and adds them to the processing queue
+   */
+  private async processQueuedAnalyses(): Promise<void> {
+    try {
+      // Find all queued analyses
+      const queuedAnalyses = await this.db.listAnalyses(500, 0, 'queued');
+
+      if (queuedAnalyses.length === 0) {
+        console.log('✅ No queued analyses found');
+        return;
+      }
+
+      console.log(`🔄 Found ${queuedAnalyses.length} queued analyses, adding to queue...`);
+
+      for (const analysis of queuedAnalyses) {
+        try {
+          // Reconstruct request
+          const request: CreateAnalysisRequest = {
+            book: {
+              title: analysis.book_title,
+              author: analysis.author,
+              genre: analysis.genre || 'business',
+            },
+            options: {
+              processingMode: analysis.processing_mode as 'batch' | 'expedited',
+              purpose: analysis.purpose as any,
+              audience: analysis.audience || 'general audience',
+            },
+            webhookUrl: analysis.webhook_url,
+          };
+
+          // Add to queue with controlled concurrency
+          this.analysisQueue.enqueue({
+            id: analysis.id,
+            priority: analysis.processing_mode as 'batch' | 'expedited',
+            retryCount: 0,
+            execute: () => this.executeAnalysis(analysis.id, request)
+          });
+
+          console.log(`  ✓ Queued: ${analysis.book_title} by ${analysis.author}`);
+
+          // Small delay to avoid overwhelming the system
+          await new Promise(resolve => setTimeout(resolve, 50));
+        } catch (error) {
+          console.error(`  ✗ Failed to queue ${analysis.id}:`, error);
+        }
+      }
+
+      console.log(`✅ Queued ${queuedAnalyses.length} analyses for processing`);
+    } catch (error) {
+      console.error('Error during queued analysis processing:', error);
       throw error;
     }
   }
